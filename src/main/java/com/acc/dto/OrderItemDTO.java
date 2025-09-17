@@ -1,11 +1,14 @@
 package com.acc.dto;
-import java.math.BigDecimal;
-import com.acc.entity.Category; 
+
+import java.math.BigDecimal; 
+
 public class OrderItemDTO {
     private Long id;
     private ProductDTO productDetails;
     private int quantity;
-    private BigDecimal price; 
+    private BigDecimal price;
+    private Double discountPercentage;
+    private BigDecimal discountedPrice;
     private Long orderId;     
 
     public Long getId() {
@@ -38,6 +41,22 @@ public class OrderItemDTO {
 
     public void setPrice(BigDecimal price) {
         this.price = price;
+    }
+
+    public Double getDiscountPercentage() {
+        return discountPercentage;
+    }
+
+    public void setDiscountPercentage(Double discountPercentage) {
+        this.discountPercentage = discountPercentage;
+    }
+
+    public BigDecimal getDiscountedPrice() {
+        return discountedPrice;
+    }
+
+    public void setDiscountedPrice(BigDecimal discountedPrice) {
+        this.discountedPrice = discountedPrice;
     }
 
     public Long getOrderId() {

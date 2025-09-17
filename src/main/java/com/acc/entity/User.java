@@ -1,4 +1,5 @@
 package com.acc.entity;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -10,17 +11,22 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.JoinTable;
 import jakarta.persistence.ManyToMany;
 import jakarta.persistence.Table;
-import jakarta.persistence.DiscriminatorColumn; 
+import jakarta.persistence.DiscriminatorColumn;
+import jakarta.persistence.DiscriminatorType;
+import jakarta.persistence.DiscriminatorValue;
 import java.util.HashSet;
 import java.util.Set;
+
 @Entity
-@Table(name = "users") 
+@Table(name = "users")
 @Inheritance(strategy = InheritanceType.JOINED) 
-@DiscriminatorColumn(name = "user_type") 
+@DiscriminatorColumn(name = "user_type", discriminatorType = DiscriminatorType.STRING) 
+@DiscriminatorValue("USER") 
 public class User {
-    @Id 
+    @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id; 
+    private Long id;
+
     @Column(unique = true, nullable = false)
     private String username;
 
@@ -28,9 +34,9 @@ public class User {
     private String email;
 
     @Column(nullable = false)
-    private String password; 
+    private String password;
 
-    @ManyToMany
+    @ManyToMany 
     @JoinTable(
         name = "user_roles",
         joinColumns = @JoinColumn(name = "user_id"),
@@ -38,19 +44,17 @@ public class User {
     )
     private Set<Role> roles = new HashSet<>();
 
-    
     public User() {}
 
-    public User(Long id, String username, String email, String password, Set<Role> roles) {
-		super();
-		this.id = id;
-		this.username = username;
-		this.email = email;
-		this.password = password;
-		this.roles = roles;
-	}
+   
+    public User(String username, String email, String password, Set<Role> roles) {
+        this.username = username;
+        this.email = email;
+        this.password = password;
+        this.roles = roles;
+    }
 
-
+    // Getters and Setters
     public Long getId() {
         return id;
     }
@@ -93,5 +97,16 @@ public class User {
 
     public void addRole(Role role) {
         this.roles.add(role);
+    }
+
+    @Override
+    public String toString() {
+        return "User{" +
+               "id=" + id +
+               ", username='" + username + '\'' +
+               ", email='" + email + '\'' +
+               
+               ", roles=" + roles +
+               '}';
     }
 }

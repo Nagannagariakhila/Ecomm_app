@@ -7,6 +7,8 @@ import com.acc.exception.ResourceNotFoundException;
 import com.acc.repository.OrderRepository;
 import com.acc.repository.PaymentRepository;
 import com.acc.service.PaymentService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
@@ -20,18 +22,20 @@ import java.util.stream.Collectors;
 @Service
 public class PaymentServiceImpl implements PaymentService {
 
+    private static final Logger log = LoggerFactory.getLogger(PaymentServiceImpl.class);
+
     @Autowired
     private PaymentRepository paymentRepository;
 
     @Autowired
     private OrderRepository orderRepository;
 
-    
     @Autowired
     @Lazy
     private PaymentServiceImpl self;
 
     private PaymentDTO convertToDTO(Payment payment) {
+        log.debug("Converting Payment entity to DTO for ID: {}", payment.getId());
         PaymentDTO dto = new PaymentDTO();
         dto.setId(payment.getId());
         dto.setPaymentDate(payment.getPaymentDate());
@@ -46,6 +50,7 @@ public class PaymentServiceImpl implements PaymentService {
     }
 
     private Payment convertToEntity(PaymentDTO dto) {
+        log.debug("Converting Payment DTO to entity for order ID: {}", dto.getOrderId());
         Payment entity = new Payment();
         entity.setPaymentDate(dto.getPaymentDate());
         entity.setAmount(dto.getAmount());
@@ -58,56 +63,77 @@ public class PaymentServiceImpl implements PaymentService {
     @Override
     @Transactional
     public PaymentDTO savePayment(PaymentDTO dto) {
+        log.info("Attempting to save a new payment for order ID: {}", dto.getOrderId());
         if (dto.getAmount() == null || dto.getAmount().compareTo(BigDecimal.ZERO) <= 0) {
+            log.error("Invalid amount provided: {}", dto.getAmount());
             throw new IllegalArgumentException("Amount must be a positive value.");
         }
 
         if (dto.getPaymentMethod() == null || dto.getPaymentMethod().trim().isEmpty()) {
+            log.error("Payment method is missing.");
             throw new IllegalArgumentException("Payment method is required.");
         }
 
         if (dto.getStatus() == null || dto.getStatus().trim().isEmpty()) {
             dto.setStatus("PENDING");
+            log.debug("Payment status was not provided, setting to default: PENDING");
         }
 
         if (dto.getPaymentDate() == null) {
             dto.setPaymentDate(LocalDateTime.now());
+            log.debug("Payment date was not provided, setting to current time.");
         }
 
         Payment payment = convertToEntity(dto);
 
         if (dto.getOrderId() != null && dto.getOrderId() != 0) {
             Order order = orderRepository.findById(dto.getOrderId())
-                    .orElseThrow(() -> new ResourceNotFoundException("Order", "Id", dto.getOrderId()));
+                    .orElseThrow(() -> {
+                        log.error("Order not found with ID: {}", dto.getOrderId());
+                        return new ResourceNotFoundException("Order", "Id", dto.getOrderId());
+                    });
             payment.setOrder(order);
+            log.debug("Associated payment with order ID: {}", order.getId());
         }
 
         Payment saved = paymentRepository.save(payment);
+        log.info("Payment saved successfully with ID: {}", saved.getId());
         return convertToDTO(saved);
     }
 
     @Override
     @Transactional(readOnly = true)
     public PaymentDTO getPaymentById(Long id) {
+        log.info("Fetching payment with ID: {}", id);
         Payment payment = paymentRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Payment", "Id", id));
+                .orElseThrow(() -> {
+                    log.error("Payment not found with ID: {}", id);
+                    return new ResourceNotFoundException("Payment", "Id", id);
+                });
         return convertToDTO(payment);
     }
 
     @Override
     @Transactional(readOnly = true)
     public List<PaymentDTO> getAllPayments() {
-        return paymentRepository.findAll()
+        log.info("Fetching all payments.");
+        List<PaymentDTO> payments = paymentRepository.findAll()
                 .stream()
                 .map(this::convertToDTO)
                 .collect(Collectors.toList());
+        log.info("Found {} payments.", payments.size());
+        return payments;
     }
 
     @Override
     @Transactional
     public PaymentDTO updatePayment(Long id, PaymentDTO dto) {
+        log.info("Attempting to update payment with ID: {}", id);
         Payment existing = paymentRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Payment", "Id", id));
+                .orElseThrow(() -> {
+                    log.error("Payment not found with ID: {}", id);
+                    return new ResourceNotFoundException("Payment", "Id", id);
+                });
 
         if (dto.getAmount() != null && dto.getAmount().compareTo(BigDecimal.ZERO) > 0) {
             existing.setAmount(dto.getAmount());
@@ -127,44 +153,58 @@ public class PaymentServiceImpl implements PaymentService {
 
         if (dto.getOrderId() != null) {
             Order order = orderRepository.findById(dto.getOrderId())
-                    .orElseThrow(() -> new ResourceNotFoundException("Order", "Id", dto.getOrderId()));
+                    .orElseThrow(() -> {
+                        log.error("Order not found with ID: {}", dto.getOrderId());
+                        return new ResourceNotFoundException("Order", "Id", dto.getOrderId());
+                    });
             existing.setOrder(order);
         }
 
         Payment updated = paymentRepository.save(existing);
+        log.info("Payment with ID {} updated successfully.", updated.getId());
         return convertToDTO(updated);
     }
 
     @Override
     @Transactional
     public void deletePayment(Long id) {
+        log.info("Attempting to delete payment with ID: {}", id);
         Payment payment = paymentRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Payment", "Id", id));
+                .orElseThrow(() -> {
+                    log.error("Payment not found with ID: {}", id);
+                    return new ResourceNotFoundException("Payment", "Id", id);
+                });
         paymentRepository.delete(payment);
+        log.info("Payment with ID {} deleted successfully.", id);
     }
 
-    
     @Override
     public PaymentDTO updatePaymentStatus(Long id, String status) {
-        return self._updatePaymentStatusInternal(id, status); 
+        log.info("Calling internal method to update payment status for ID {} to '{}'.", id, status);
+        return self._updatePaymentStatusInternal(id, status);
     }
 
-    
     @Transactional
     public PaymentDTO _updatePaymentStatusInternal(Long id, String status) {
+        log.info("Starting internal transaction to update payment status for ID {}...", id);
+        
         Payment payment = paymentRepository.findById(id)
-            .orElseThrow(() -> new ResourceNotFoundException("Payment", "Id", id));
+                .orElseThrow(() -> {
+                    log.error("Payment not found with ID: {}", id);
+                    return new ResourceNotFoundException("Payment", "Id", id);
+                });
 
         if (status == null || status.isBlank()) {
+            log.error("Status must not be empty for payment ID {}.", id);
             throw new IllegalArgumentException("Status must not be empty");
         }
 
-        System.out.println("🔄 Updating payment ID " + id + " from " + payment.getStatus() + " to " + status);
+        log.info("Updating payment ID {} from status '{}' to '{}'.", id, payment.getStatus(), status);
 
         payment.setStatus(status);
         Payment updated = paymentRepository.saveAndFlush(payment);
 
-        System.out.println("✅ Updated payment ID " + updated.getId() + " to status " + updated.getStatus());
+        log.info("Payment ID {} successfully updated to status '{}'.", updated.getId(), updated.getStatus());
 
         return convertToDTO(updated);
     }

@@ -1,4 +1,6 @@
 package com.acc.controller;
+
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,24 +17,30 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping; 
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import com.acc.config.JwtUtil; 
-import com.acc.dto.AuthRequestDTO; 
-import com.acc.dto.AuthResponseDTO; 
-import com.acc.dto.UserDTO; 
+import com.acc.config.JwtUtil;
+import com.acc.dto.AuthRequestDTO;
+import com.acc.dto.AuthResponseDTO;
+import com.acc.dto.UserDTO;
 import com.acc.entity.User;
+import com.acc.service.AuthService;
 import com.acc.service.UserService;
-import org.springframework.dao.DataIntegrityViolationException; 
+import org.springframework.dao.DataIntegrityViolationException;
+
 @RestController
-@RequestMapping("/api/auth") 
-public class AuthController { 
+@RequestMapping("/api/auth")
+public class AuthController {
     @Autowired
     private AuthenticationManager authenticationManager;
     @Autowired
-    private JwtUtil jwtUtil; 
+    private JwtUtil jwtUtil;
     @Autowired
-    private UserService userService; 
+    private UserService userService;
+    @Autowired // This was missing in your provided snippet, but assumed to be there.
+    private AuthService authService;
+
+
     @PostMapping("/register")
     public ResponseEntity<?> registerUser(@Validated @RequestBody UserDTO userDto) {
         try {
@@ -49,10 +57,11 @@ public class AuthController {
         } catch (IllegalArgumentException e) {
             return new ResponseEntity<>("Registration failed: " + e.getMessage(), HttpStatus.BAD_REQUEST);
         } catch (Exception e) {
-            System.err.println("Error during user registration: " + e.getMessage()); 
+            System.err.println("Error during user registration: " + e.getMessage());
             return new ResponseEntity<>("Registration failed due to an unexpected error.", HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
+
     @PostMapping("/login")
     public ResponseEntity<?> loginUser(@Validated @RequestBody AuthRequestDTO authRequestDTO) {
         try {
@@ -68,10 +77,10 @@ public class AuthController {
                     .map(GrantedAuthority::getAuthority)
                     .orElse("ROLE_USER");
 
-           
+
             UserDTO userDTO = userService.getUserByUsername(authRequestDTO.getUsername());
 
-            
+
             AuthResponseDTO response = new AuthResponseDTO();
             response.setToken(jwt);
             response.setMessage("Login successful");
@@ -89,15 +98,62 @@ public class AuthController {
     }
 
 
-
     @GetMapping("/admin/welcome")
-    @PreAuthorize("hasAuthority('ROLE_ADMIN')") 
+    @PreAuthorize("hasAuthority('ROLE_ADMIN')")
     public ResponseEntity<String> welcomeAdmin() {
         return new ResponseEntity<>("Welcome, Admin! You have access to administrative resources.", HttpStatus.OK);
     }
+
     @GetMapping("/user/welcome")
-    @PreAuthorize("hasAuthority('ROLE_USER')") 
+    @PreAuthorize("hasAuthority('ROLE_USER')")
     public ResponseEntity<String> welcomeUser() {
         return new ResponseEntity<>("Welcome, User! You have access to general user resources.", HttpStatus.OK);
+    }
+
+
+    @PostMapping("/otp/generate")
+    public ResponseEntity<?> generateOtp(@RequestBody Map<String, String> request) {
+        String email = request.get("email");
+        if (email == null) {
+            return ResponseEntity.badRequest().body(Collections.singletonMap("error", "Email is required."));
+        }
+        try {
+            authService.generateAndSendOtp(email);
+            return ResponseEntity.ok(Collections.singletonMap("message", "OTP sent to your email."));
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.badRequest().body(Collections.singletonMap("error", e.getMessage()));
+        }
+    }
+
+    @PostMapping("/otp/verify")
+    public ResponseEntity<AuthResponseDTO> verifyOtp(@RequestBody Map<String, String> request) { // Changed return type
+        String email = request.get("email");
+        String otp = request.get("otp");
+        if (email == null || otp == null) {
+            
+            AuthResponseDTO errorResponse = new AuthResponseDTO();
+            errorResponse.setMessage("Email and OTP are required.");
+            errorResponse.setToken(null); 
+            errorResponse.setUser(null);  
+            return ResponseEntity.badRequest().body(errorResponse);
+        }
+        try {
+            
+            AuthResponseDTO response = authService.verifyOtp(email, otp);
+            return ResponseEntity.ok(response);
+        } catch (IllegalArgumentException e) {
+            AuthResponseDTO errorResponse = new AuthResponseDTO();
+            errorResponse.setMessage(e.getMessage());
+            errorResponse.setToken(null);
+            errorResponse.setUser(null);
+            return ResponseEntity.badRequest().body(errorResponse);
+        } catch (Exception e) { 
+            AuthResponseDTO errorResponse = new AuthResponseDTO();
+            errorResponse.setMessage("An internal server error occurred during OTP verification.");
+            errorResponse.setToken(null);
+            errorResponse.setUser(null);
+            System.err.println("Error during OTP verification: " + e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(errorResponse);
+        }
     }
 }

@@ -12,8 +12,8 @@ import com.razorpay.*;
 @Service
 public class RazorpayService {
 
- private static final String KEY_ID = "rzp_test_Y4uo7eqttsVY76"; 
- private static final String KEY_SECRET = "OX3ecjuwENH8wqXBWXetCm8s"; 
+ private static final String KEY_ID = "rzp_test_RFNLCCDDkhQcUC"; 
+ private static final String KEY_SECRET = "gbYPLOpK4KRQUZoNGHBa5Thc"; 
  public String createOrder(int amountInRupees) throws RazorpayException {
      RazorpayClient razorpayClient = new RazorpayClient(KEY_ID, KEY_SECRET);
 

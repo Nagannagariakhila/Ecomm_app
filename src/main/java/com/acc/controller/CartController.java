@@ -35,7 +35,7 @@ public class CartController {
     }
 
     
-    @PutMapping("/customer/{customerId}/items/{productId}")
+    @PutMapping("/{customerId}/items/{productId}")
     public ResponseEntity<CartDTO> updateProductQuantityInCart(
             @PathVariable Long customerId,
             @PathVariable Long productId,

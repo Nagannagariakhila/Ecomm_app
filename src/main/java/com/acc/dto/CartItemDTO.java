@@ -3,11 +3,14 @@ package com.acc.dto;
 import java.math.BigDecimal;
 
 public class CartItemDTO {
+
     private Long id;
     private Long productId;
     private String productName;
-    private Integer quantity;
     private BigDecimal price;
+    private Double discountPercentage;
+    private BigDecimal discountedPrice;
+    private Integer quantity;
 
     public Long getId() {
         return id;
@@ -26,19 +29,11 @@ public class CartItemDTO {
     }
 
     public String getProductName() {
-        return productName; // ✅ CORRECT
+        return productName;
     }
 
     public void setProductName(String productName) {
-        this.productName = productName; // ✅ CORRECT
-    }
-
-    public Integer getQuantity() {
-        return quantity;
-    }
-
-    public void setQuantity(Integer quantity) {
-        this.quantity = quantity;
+        this.productName = productName;
     }
 
     public BigDecimal getPrice() {
@@ -47,5 +42,29 @@ public class CartItemDTO {
 
     public void setPrice(BigDecimal price) {
         this.price = price;
+    }
+
+    public Double getDiscountPercentage() {
+        return discountPercentage;
+    }
+
+    public void setDiscountPercentage(Double discountPercentage) {
+        this.discountPercentage = discountPercentage;
+    }
+
+    public BigDecimal getDiscountedPrice() {
+        return discountedPrice;
+    }
+
+    public void setDiscountedPrice(BigDecimal discountedPrice) {
+        this.discountedPrice = discountedPrice;
+    }
+
+    public Integer getQuantity() {
+        return quantity;
+    }
+
+    public void setQuantity(Integer quantity) {
+        this.quantity = quantity;
     }
 }

@@ -1,17 +1,18 @@
 package com.acc.serviceImpl;
 
 import com.acc.dto.UserDTO;
-import com.acc.entity.Admin;
-import com.acc.entity.Customer;
-import com.acc.entity.Role;
-import com.acc.entity.User;
+import com.acc.entity.*;
 import com.acc.repository.AdminRepository;
+import com.acc.repository.CustomerRepository;
 import com.acc.repository.RoleRepository;
+import com.acc.repository.SuperAdminRepository;
 import com.acc.repository.UserRepository;
 import com.acc.service.UserService;
 
 import jakarta.transaction.Transactional;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Primary;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -28,21 +29,36 @@ import java.util.stream.Collectors;
 @Primary
 public class UserServiceImpl implements UserService, UserDetailsService {
 
-    @Autowired private UserRepository userRepository;
-    @Autowired private AdminRepository adminRepository;
-    @Autowired private RoleRepository roleRepository;
-    @Autowired private PasswordEncoder passwordEncoder;
+    
+    private static final Logger log = LoggerFactory.getLogger(UserServiceImpl.class);
 
-    private UserDTO convertToDTO(User user) {
+    @Autowired
+    private UserRepository userRepository;
+    @Autowired
+    private AdminRepository adminRepository;
+    @Autowired
+    private CustomerRepository customerRepository;
+    @Autowired
+    private SuperAdminRepository superAdminRepository;
+    @Autowired
+    private RoleRepository roleRepository;
+    @Autowired
+    private PasswordEncoder passwordEncoder;
+
+    @Override
+    public UserDTO convertToDTO(User user) {
         UserDTO dto = new UserDTO();
         dto.setId(user.getId());
         dto.setUsername(user.getUsername());
         dto.setEmail(user.getEmail());
-        dto.setRole(user.getRoles().stream()
-                .map(Role::getName)
-                .findFirst()
-                .orElse("UNKNOWN_ROLE")
-                .replace("ROLE_", ""));
+
+        if (user.getRoles() != null && !user.getRoles().isEmpty()) {
+            dto.setRoles(user.getRoles().stream()
+                    .map(Role::getName)
+                    .collect(Collectors.toSet()));
+        } else {
+            dto.setRoles(Collections.emptySet());
+        }
         return dto;
     }
 
@@ -62,15 +78,18 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     @Transactional
     public UserDTO registerUser(UserDTO userDto) {
         if (userRepository.findByUsername(userDto.getUsername()).isPresent()) {
+            log.warn("Username already exists: {}", userDto.getUsername());
             throw new IllegalArgumentException("Username already exists: " + userDto.getUsername());
         }
 
         if (userRepository.findByEmail(userDto.getEmail()).isPresent()) {
+            log.warn("Email already registered: {}", userDto.getEmail());
             throw new IllegalArgumentException("Email already registered: " + userDto.getEmail());
         }
 
         User user = createUserEntityFromDTO(userDto);
         User savedUser = userRepository.save(user);
+        log.info("User registered successfully: {}", savedUser.getUsername());
         return convertToDTO(savedUser);
     }
 
@@ -106,76 +125,189 @@ public class UserServiceImpl implements UserService, UserDetailsService {
         User existingUser = userRepository.findById(id)
                 .orElseThrow(() -> new UsernameNotFoundException("User not found with ID: " + id));
 
-        if (userDTO.getUsername() != null) {
+        if (userDTO.getUsername() != null && !userDTO.getUsername().equals(existingUser.getUsername())) {
+            Optional<User> userWithSameUsername = userRepository.findByUsername(userDTO.getUsername());
+            if (userWithSameUsername.isPresent() && !userWithSameUsername.get().getId().equals(id)) {
+                log.warn("Attempted to update username to an existing one: {}", userDTO.getUsername());
+                throw new IllegalArgumentException("Username already exists: " + userDTO.getUsername());
+            }
             existingUser.setUsername(userDTO.getUsername());
         }
 
-        if (userDTO.getEmail() != null) {
+        if (userDTO.getEmail() != null && !userDTO.getEmail().equals(existingUser.getEmail())) {
+            Optional<User> userWithSameEmail = userRepository.findByEmail(userDTO.getEmail());
+            if (userWithSameEmail.isPresent() && !userWithSameEmail.get().getId().equals(id)) {
+                log.warn("Attempted to update email to an existing one: {}", userDTO.getEmail());
+                throw new IllegalArgumentException("Email already registered: " + userDTO.getEmail());
+            }
             existingUser.setEmail(userDTO.getEmail());
         }
 
-        if (userDTO.getPassword() != null) {
+        if (userDTO.getPassword() != null && !userDTO.getPassword().isEmpty()) {
             existingUser.setPassword(passwordEncoder.encode(userDTO.getPassword()));
         }
 
-        if (userDTO.getRole() != null) {
-            Role newRole = roleRepository.findByName("ROLE_" + userDTO.getRole().toUpperCase())
-                    .orElseThrow(() -> new IllegalArgumentException("Role not found"));
-            existingUser.setRoles(Set.of(newRole));
+        if (userDTO.getRoles() != null && !userDTO.getRoles().isEmpty()) {
+            Set<Role> newRoles = userDTO.getRoles().stream()
+                    .map(roleName -> roleRepository.findByName("ROLE_" + roleName.toUpperCase())
+                            .orElseThrow(() -> {
+                                log.error("Role not found during update: {}", roleName);
+                                return new IllegalArgumentException("Role not found: " + roleName);
+                            }))
+                    .collect(Collectors.toSet());
+            existingUser.setRoles(newRoles);
         }
 
-        return convertToDTO(userRepository.save(existingUser));
+        User updatedUser = userRepository.save(existingUser);
+        log.info("User updated successfully: {}", updatedUser.getUsername());
+        return convertToDTO(updatedUser);
     }
 
     @Override
     @Transactional
     public void deleteUser(Long id) {
         if (!userRepository.existsById(id)) {
+            log.warn("Attempted to delete a non-existent user with ID: {}", id);
             throw new UsernameNotFoundException("User not found with ID: " + id);
         }
         userRepository.deleteById(id);
+        log.info("User with ID {} deleted successfully.", id);
     }
 
     @Override
-    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        Optional<User> userOptional = userRepository.findByUsernameWithRoles(username);
-        if (userOptional.isPresent()) {
-            User user = userOptional.get();
+    public UserDetails loadUserByUsername(String identifier) throws UsernameNotFoundException {
+        log.debug("Attempting to load user with identifier (username/email): {}", identifier);
+
+        Optional<User> userOptionalByEmail = userRepository.findByEmail(identifier);
+        if (userOptionalByEmail.isPresent()) {
+            User user = userOptionalByEmail.get();
+            log.debug("Found User by email: {} (ID: {})", identifier, user.getId());
+            return buildUserDetails(user.getEmail(), user.getPassword(), user.getRoles());
+        }
+
+        Optional<User> userOptionalByUsername = userRepository.findByUsernameWithRoles(identifier);
+        if (userOptionalByUsername.isPresent()) {
+            User user = userOptionalByUsername.get();
+            log.debug("Found User by username: {} (ID: {})", identifier, user.getId());
             return buildUserDetails(user.getUsername(), user.getPassword(), user.getRoles());
         }
 
-        Optional<Admin> adminOptional = adminRepository.findByUsername(username);
-        if (adminOptional.isPresent()) {
-            Admin admin = adminOptional.get();
+        Optional<Admin> adminOptionalByEmail = adminRepository.findByEmail(identifier);
+        if (adminOptionalByEmail.isPresent()) {
+            Admin admin = adminOptionalByEmail.get();
+            log.debug("Found Admin by email: {}", identifier);
+            return buildUserDetails(admin.getEmail(), admin.getPassword(), admin.getRoles());
+        }
+
+        Optional<Admin> adminOptionalByUsername = adminRepository.findByUsername(identifier);
+        if (adminOptionalByUsername.isPresent()) {
+            Admin admin = adminOptionalByUsername.get();
+            log.debug("Found Admin by username: {}", identifier);
             return buildUserDetails(admin.getUsername(), admin.getPassword(), admin.getRoles());
         }
 
-        throw new UsernameNotFoundException("User or Admin not found: " + username);
+        log.warn("User or Admin not found for identifier: {}", identifier);
+        throw new UsernameNotFoundException("User or Admin not found: " + identifier);
     }
 
     @Override
     @Transactional
     public User save(UserDTO userDto) {
         User user = createUserEntityFromDTO(userDto);
-        return userRepository.save(user);
+        User savedUser = userRepository.save(user);
+        log.info("User saved: {}", savedUser.getUsername());
+        return savedUser;
     }
 
     private User createUserEntityFromDTO(UserDTO userDto) {
-        String roleName = "ROLE_" + (userDto.getRole() != null ? userDto.getRole().toUpperCase() : "USER");
-        Role role = roleRepository.findByName(roleName)
-                .orElseThrow(() -> new IllegalArgumentException("Role not found: " + roleName));
+        Set<Role> assignedRoles = new HashSet<>();
+
+        if (userDto.getRoles() != null && !userDto.getRoles().isEmpty()) {
+            assignedRoles = userDto.getRoles().stream()
+                    .map(roleName -> roleRepository.findByName("ROLE_" + roleName.toUpperCase())
+                            .orElseThrow(() -> {
+                                log.error("Role not found during user creation: {}", roleName);
+                                return new IllegalArgumentException("Role not found: " + roleName);
+                            }))
+                    .collect(Collectors.toSet());
+        } else {
+            Role defaultCustomerRole = roleRepository.findByName("ROLE_CUSTOMER")
+                    .orElseThrow(() -> {
+                        log.error("Default CUSTOMER role not found.");
+                        return new IllegalArgumentException("Default CUSTOMER role not found.");
+                    });
+            assignedRoles.add(defaultCustomerRole);
+        }
 
         User user;
-        switch (roleName) {
-            case "ROLE_ADMIN": user = new Admin(); break;
-            case "ROLE_CUSTOMER": user = new Customer(); break;
-            default: user = new User(); break;
+        if (assignedRoles.stream().anyMatch(r -> r.getName().equals("ROLE_SUPER_ADMIN"))) {
+            user = new SuperAdmin();
+        } else if (assignedRoles.stream().anyMatch(r -> r.getName().equals("ROLE_ADMIN"))) {
+            user = new Admin();
+        } else if (assignedRoles.stream().anyMatch(r -> r.getName().equals("ROLE_CUSTOMER"))) {
+            user = new Customer();
+        } else {
+            user = new User();
         }
 
         user.setUsername(userDto.getUsername());
         user.setEmail(userDto.getEmail());
-        user.setPassword(passwordEncoder.encode(userDto.getPassword()));
-        user.setRoles(Collections.singleton(role));
+        user.setPassword(userDto.getPassword() != null && !userDto.getPassword().isBlank()
+                ? passwordEncoder.encode(userDto.getPassword())
+                : "");
+        user.setRoles(assignedRoles);
+        log.debug("Created user entity from DTO: {}", userDto.getUsername());
         return user;
+    }
+
+    @Override
+    @Transactional
+    public UserDTO updateUserRoles(String identifier, Set<String> newRoleNames) {
+        log.debug("Starting updateUserRoles for identifier: {}", identifier);
+        log.debug("New role names requested: {}", newRoleNames);
+
+        User user = userRepository.findByEmail(identifier)
+                .orElseGet(() -> userRepository.findByUsername(identifier)
+                        .orElseThrow(() -> {
+                            log.error("User not found for role update with identifier: {}", identifier);
+                            return new UsernameNotFoundException("User not found with identifier: " + identifier);
+                        }));
+        log.debug("Found user: {} (ID: {})", user.getUsername(), user.getId());
+        log.debug("User's current roles: {}", user.getRoles().stream().map(Role::getName).collect(Collectors.joining(", ")));
+
+        if (user.getRoles().stream().anyMatch(r -> r.getName().equals("ROLE_SUPER_ADMIN"))) {
+            log.error("Attempted to modify roles of a Super Admin. Operation denied.");
+            throw new IllegalArgumentException("Cannot modify roles of a Super Admin through this interface.");
+        }
+
+        if (newRoleNames.stream().anyMatch(r -> r.equalsIgnoreCase("ROLE_SUPER_ADMIN"))) {
+            log.error("Attempted to assign ROLE_SUPER_ADMIN. Operation denied.");
+            throw new IllegalArgumentException("Cannot assign ROLE_SUPER_ADMIN role.");
+        }
+
+        Set<Role> rolesToAssign = newRoleNames.stream()
+                .map(roleName -> {
+                    String fullRoleName = roleName.toUpperCase().startsWith("ROLE_") ? roleName.toUpperCase() : "ROLE_" + roleName.toUpperCase();
+                    log.debug("Looking up role: {}", fullRoleName);
+                    return roleRepository.findByName(fullRoleName)
+                            .orElseThrow(() -> {
+                                log.error("Role not found in database: {}", fullRoleName);
+                                return new IllegalArgumentException("Role not found: " + fullRoleName);
+                            });
+                })
+                .collect(Collectors.toSet());
+        log.debug("Roles to assign (entities): {}", rolesToAssign.stream().map(Role::getName).collect(Collectors.joining(", ")));
+
+        user.setRoles(rolesToAssign);
+        log.debug("User entity roles updated in memory.");
+
+        User updatedUser = userRepository.save(user);
+        log.info("User saved to repository. ID: {}", updatedUser.getId());
+
+        UserDTO resultDTO = convertToDTO(updatedUser);
+        log.debug("Converted updated user to DTO. DTO roles: {}", resultDTO.getRoles());
+        log.debug("Finished updateUserRoles for identifier: {}", identifier);
+
+        return resultDTO;
     }
 }

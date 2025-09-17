@@ -1,7 +1,8 @@
 package com.acc.dto;
+
 import java.math.BigDecimal;
 import java.util.List;
-import com.acc.entity.Category; 
+import com.acc.entity.Category;
 
 public class ProductDTO {
     private Long id;
@@ -10,9 +11,18 @@ public class ProductDTO {
     private List<String> images;
     private BigDecimal price;
     private Integer stockQuantity;
-    private Category category; 
+    private Category category;
+    private Double discountPercentage;
+    private BigDecimal discountedPrice;
+    private boolean active; 
 
-    public Long getId() { return id; }
+    public boolean isActive() {
+		return active;
+	}
+	public void setActive(boolean active) {
+		this.active = active;
+	}
+	public Long getId() { return id; }
     public void setId(Long id) { this.id = id; }
     public String getName() { return name; }
     public void setName(String name) { this.name = name; }
@@ -24,12 +34,10 @@ public class ProductDTO {
     public void setPrice(BigDecimal price) { this.price = price; }
     public Integer getStockQuantity() { return stockQuantity; }
     public void setStockQuantity(Integer stockQuantity) { this.stockQuantity = stockQuantity; }
-
-    public Category getCategory() { 
-        return category;
-    }
-
-    public void setCategory(Category category) { 
-        this.category = category;
-    }
+    public Category getCategory() { return category; }
+    public void setCategory(Category category) { this.category = category; }
+    public Double getDiscountPercentage() { return discountPercentage; }
+    public void setDiscountPercentage(Double discountPercentage) { this.discountPercentage = discountPercentage; }
+    public BigDecimal getDiscountedPrice() { return discountedPrice; }
+    public void setDiscountedPrice(BigDecimal discountedPrice) { this.discountedPrice = discountedPrice; }
 }

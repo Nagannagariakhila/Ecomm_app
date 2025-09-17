@@ -1,0 +1,369 @@
+2025-08-08T15:31:05.159+05:30  INFO 13552 --- [ECommerce_application1] [restartedMain] c.a.ECommerceApplication1Application     : Starting ECommerceApplication1Application using Java 21.0.6 with PID 13552 (C:\Users\akhila.gari\Desktop\Project\Project_Z\EComm_back\ECommerce_application1\target\classes started by akhila.gari in C:\Users\akhila.gari\Desktop\Project\Project_Z\EComm_back\ECommerce_application1)
+2025-08-08T15:31:05.169+05:30  INFO 13552 --- [ECommerce_application1] [restartedMain] c.a.ECommerceApplication1Application     : No active profile set, falling back to 1 default profile: "default"
+2025-08-08T15:31:05.220+05:30  INFO 13552 --- [ECommerce_application1] [restartedMain] .e.DevToolsPropertyDefaultsPostProcessor : Devtools property defaults active! Set 'spring.devtools.add-properties' to 'false' to disable
+2025-08-08T15:31:05.220+05:30  INFO 13552 --- [ECommerce_application1] [restartedMain] .e.DevToolsPropertyDefaultsPostProcessor : For additional web related logging consider setting the 'logging.level.web' property to 'DEBUG'
+2025-08-08T15:31:06.189+05:30  INFO 13552 --- [ECommerce_application1] [restartedMain] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2025-08-08T15:31:06.433+05:30  INFO 13552 --- [ECommerce_application1] [restartedMain] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 233 ms. Found 14 JPA repository interfaces.
+2025-08-08T15:31:07.225+05:30  INFO 13552 --- [ECommerce_application1] [restartedMain] o.s.b.w.e.t.TomcatWebServer              : Tomcat initialized with port 8081 (http)
+2025-08-08T15:31:07.243+05:30  INFO 13552 --- [ECommerce_application1] [restartedMain] o.a.c.c.StandardService                  : Starting service [Tomcat]
+2025-08-08T15:31:07.244+05:30  INFO 13552 --- [ECommerce_application1] [restartedMain] o.a.c.c.StandardEngine                   : Starting Servlet engine: [Apache Tomcat/10.1.41]
+2025-08-08T15:31:07.316+05:30  INFO 13552 --- [ECommerce_application1] [restartedMain] o.a.c.c.C.[.[.[/]                        : Initializing Spring embedded WebApplicationContext
+2025-08-08T15:31:07.317+05:30  INFO 13552 --- [ECommerce_application1] [restartedMain] w.s.c.ServletWebServerApplicationContext : Root WebApplicationContext: initialization completed in 2096 ms
+2025-08-08T15:31:07.513+05:30  INFO 13552 --- [ECommerce_application1] [restartedMain] o.h.j.i.u.LogHelper                      : HHH000204: Processing PersistenceUnitInfo [name: default]
+2025-08-08T15:31:07.587+05:30  INFO 13552 --- [ECommerce_application1] [restartedMain] o.h.Version                              : HHH000412: Hibernate ORM core version 6.5.3.Final
+2025-08-08T15:31:07.629+05:30  INFO 13552 --- [ECommerce_application1] [restartedMain] o.h.c.i.RegionFactoryInitiator           : HHH000026: Second-level cache disabled
+2025-08-08T15:31:07.990+05:30  INFO 13552 --- [ECommerce_application1] [restartedMain] o.s.o.j.p.SpringPersistenceUnitInfo      : No LoadTimeWeaver setup: ignoring JPA class transformer
+2025-08-08T15:31:08.032+05:30  INFO 13552 --- [ECommerce_application1] [restartedMain] c.z.h.HikariDataSource                   : HikariPool-1 - Starting...
+2025-08-08T15:31:08.430+05:30  INFO 13552 --- [ECommerce_application1] [restartedMain] c.z.h.p.HikariPool                       : HikariPool-1 - Added connection com.mysql.cj.jdbc.ConnectionImpl@501de85d
+2025-08-08T15:31:08.433+05:30  INFO 13552 --- [ECommerce_application1] [restartedMain] c.z.h.HikariDataSource                   : HikariPool-1 - Start completed.
+2025-08-08T15:31:08.499+05:30  WARN 13552 --- [ECommerce_application1] [restartedMain] o.h.o.deprecation                        : HHH90000025: MySQLDialect does not need to be specified explicitly using 'hibernate.dialect' (remove the property setting and it will be selected by default)
+2025-08-08T15:31:08.529+05:30 DEBUG 13552 --- [ECommerce_application1] [restartedMain] o.h.t.d.s.s.DdlTypeRegistry              : addDescriptor(12, org.hibernate.type.descriptor.sql.internal.CapacityDependentDdlType@37facf3f) replaced previous registration(org.hibernate.type.descriptor.sql.internal.CapacityDependentDdlType@4492fbb)
+2025-08-08T15:31:08.529+05:30 DEBUG 13552 --- [ECommerce_application1] [restartedMain] o.h.t.d.s.s.DdlTypeRegistry              : addDescriptor(-9, org.hibernate.type.descriptor.sql.internal.CapacityDependentDdlType@778f1a2c) replaced previous registration(org.hibernate.type.descriptor.sql.internal.CapacityDependentDdlType@736aebaf)
+2025-08-08T15:31:08.529+05:30 DEBUG 13552 --- [ECommerce_application1] [restartedMain] o.h.t.d.s.s.DdlTypeRegistry              : addDescriptor(-3, org.hibernate.type.descriptor.sql.internal.CapacityDependentDdlType@120841ca) replaced previous registration(org.hibernate.type.descriptor.sql.internal.CapacityDependentDdlType@5f7180c7)
+2025-08-08T15:31:08.530+05:30 DEBUG 13552 --- [ECommerce_application1] [restartedMain] o.h.t.d.s.s.DdlTypeRegistry              : addDescriptor(4003, org.hibernate.type.descriptor.sql.internal.DdlTypeImpl@5020af7f) replaced previous registration(org.hibernate.type.descriptor.sql.internal.DdlTypeImpl@74b30147)
+2025-08-08T15:31:08.530+05:30 DEBUG 13552 --- [ECommerce_application1] [restartedMain] o.h.t.d.s.s.DdlTypeRegistry              : addDescriptor(4001, org.hibernate.type.descriptor.sql.internal.DdlTypeImpl@24e5080a) replaced previous registration(org.hibernate.type.descriptor.sql.internal.DdlTypeImpl@7741d3e9)
+2025-08-08T15:31:08.530+05:30 DEBUG 13552 --- [ECommerce_application1] [restartedMain] o.h.t.d.s.s.DdlTypeRegistry              : addDescriptor(4002, org.hibernate.type.descriptor.sql.internal.DdlTypeImpl@224fd129) replaced previous registration(org.hibernate.type.descriptor.sql.internal.DdlTypeImpl@4e9a551e)
+2025-08-08T15:31:08.530+05:30 DEBUG 13552 --- [ECommerce_application1] [restartedMain] o.h.t.d.s.s.DdlTypeRegistry              : addDescriptor(2004, org.hibernate.type.descriptor.sql.internal.CapacityDependentDdlType@42b3a19f) replaced previous registration(org.hibernate.type.descriptor.sql.internal.DdlTypeImpl@3b14fcbb)
+2025-08-08T15:31:08.530+05:30 DEBUG 13552 --- [ECommerce_application1] [restartedMain] o.h.t.d.s.s.DdlTypeRegistry              : addDescriptor(2005, org.hibernate.type.descriptor.sql.internal.CapacityDependentDdlType@678eb469) replaced previous registration(org.hibernate.type.descriptor.sql.internal.DdlTypeImpl@7b203f23)
+2025-08-08T15:31:08.531+05:30 DEBUG 13552 --- [ECommerce_application1] [restartedMain] o.h.t.d.s.s.DdlTypeRegistry              : addDescriptor(2011, org.hibernate.type.descriptor.sql.internal.CapacityDependentDdlType@24c0d681) replaced previous registration(org.hibernate.type.descriptor.sql.internal.DdlTypeImpl@382d0786)
+2025-08-08T15:31:08.709+05:30  WARN 13552 --- [ECommerce_application1] [restartedMain] o.h.b.m.i.EntityBinder                   : HHH000457: Joined inheritance hierarchy [com.acc.entity.User] defined explicit @DiscriminatorColumn.  Legacy Hibernate behavior was to ignore the @DiscriminatorColumn.  However, as part of issue HHH-6911 we now apply the explicit @DiscriminatorColumn.  If you would prefer the legacy behavior, enable the `hibernate.discriminator.ignore_explicit_for_joined` setting (hibernate.discriminator.ignore_explicit_for_joined=true)
+2025-08-08T15:31:09.911+05:30  INFO 13552 --- [ECommerce_application1] [restartedMain] o.h.e.t.j.p.i.JtaPlatformInitiator       : HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+2025-08-08T15:31:10.129+05:30  INFO 13552 --- [ECommerce_application1] [restartedMain] j.LocalContainerEntityManagerFactoryBean : Initialized JPA EntityManagerFactory for persistence unit 'default'
+2025-08-08T15:31:10.383+05:30  INFO 13552 --- [ECommerce_application1] [restartedMain] o.s.d.j.r.q.QueryEnhancerFactory         : Hibernate is in classpath; If applicable, HQL parser will be used.
+2025-08-08T15:31:11.027+05:30  WARN 13552 --- [ECommerce_application1] [restartedMain] o.s.a.f.CglibAopProxy                    : Unable to proxy interface-implementing method [public final void org.springframework.web.filter.OncePerRequestFilter.doFilter(jakarta.servlet.ServletRequest,jakarta.servlet.ServletResponse,jakarta.servlet.FilterChain) throws jakarta.servlet.ServletException,java.io.IOException] because it is marked as final, consider using interface-based JDK proxies instead.
+2025-08-08T15:31:11.027+05:30  WARN 13552 --- [ECommerce_application1] [restartedMain] o.s.a.f.CglibAopProxy                    : Unable to proxy interface-implementing method [public final void org.springframework.web.filter.GenericFilterBean.init(jakarta.servlet.FilterConfig) throws jakarta.servlet.ServletException] because it is marked as final, consider using interface-based JDK proxies instead.
+2025-08-08T15:31:11.235+05:30  INFO 13552 --- [ECommerce_application1] [restartedMain] eAuthenticationProviderManagerConfigurer : Global AuthenticationManager configured with AuthenticationProvider bean with name authenticationProvider
+2025-08-08T15:31:11.237+05:30  WARN 13552 --- [ECommerce_application1] [restartedMain] r$InitializeUserDetailsManagerConfigurer : Global AuthenticationManager configured with an AuthenticationProvider bean. UserDetailsService beans will not be used for username/password login. Consider removing the AuthenticationProvider bean. Alternatively, consider using the UserDetailsService in a manually instantiated DaoAuthenticationProvider.
+2025-08-08T15:31:11.748+05:30  WARN 13552 --- [ECommerce_application1] [restartedMain] JpaBaseConfiguration$JpaWebConfiguration : spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2025-08-08T15:31:11.836+05:30 DEBUG 13552 --- [ECommerce_application1] [restartedMain] o.s.s.a.h.RoleHierarchyImpl              : setHierarchy() - The following role hierarchy was set: ROLE_SUPER_ADMIN > ROLE_ADMIN 
+ ROLE_ADMIN > ROLE_CUSTOMER 
+ ROLE_CUSTOMER > ROLE_USER
+2025-08-08T15:31:11.836+05:30 DEBUG 13552 --- [ECommerce_application1] [restartedMain] o.s.s.a.h.RoleHierarchyImpl              : buildRolesReachableInOneStepMap() - From role ROLE_SUPER_ADMIN one can reach role ROLE_ADMIN in one step.
+2025-08-08T15:31:11.837+05:30 DEBUG 13552 --- [ECommerce_application1] [restartedMain] o.s.s.a.h.RoleHierarchyImpl              : buildRolesReachableInOneStepMap() - From role ROLE_ADMIN one can reach role ROLE_CUSTOMER in one step.
+2025-08-08T15:31:11.837+05:30 DEBUG 13552 --- [ECommerce_application1] [restartedMain] o.s.s.a.h.RoleHierarchyImpl              : buildRolesReachableInOneStepMap() - From role ROLE_CUSTOMER one can reach role ROLE_USER in one step.
+2025-08-08T15:31:11.837+05:30 DEBUG 13552 --- [ECommerce_application1] [restartedMain] o.s.s.a.h.RoleHierarchyImpl              : buildRolesReachableInOneOrMoreStepsMap() - From role ROLE_CUSTOMER one can reach [ROLE_USER] in one or more steps.
+2025-08-08T15:31:11.838+05:30 DEBUG 13552 --- [ECommerce_application1] [restartedMain] o.s.s.a.h.RoleHierarchyImpl              : buildRolesReachableInOneOrMoreStepsMap() - From role ROLE_ADMIN one can reach [ROLE_CUSTOMER, ROLE_USER] in one or more steps.
+2025-08-08T15:31:11.838+05:30 DEBUG 13552 --- [ECommerce_application1] [restartedMain] o.s.s.a.h.RoleHierarchyImpl              : buildRolesReachableInOneOrMoreStepsMap() - From role ROLE_SUPER_ADMIN one can reach [ROLE_CUSTOMER, ROLE_USER, ROLE_ADMIN] in one or more steps.
+2025-08-08T15:31:12.085+05:30 DEBUG 13552 --- [ECommerce_application1] [restartedMain] o.s.s.w.DefaultSecurityFilterChain       : Will secure any request with filters: DisableEncodeUrlFilter, WebAsyncManagerIntegrationFilter, SecurityContextHolderFilter, HeaderWriterFilter, CorsFilter, LogoutFilter, JwtFilter$$SpringCGLIB$$0, RequestCacheAwareFilter, SecurityContextHolderAwareRequestFilter, AnonymousAuthenticationFilter, SessionManagementFilter, ExceptionTranslationFilter, AuthorizationFilter
+2025-08-08T15:31:12.460+05:30  INFO 13552 --- [ECommerce_application1] [restartedMain] o.s.b.d.a.OptionalLiveReloadServer       : LiveReload server is running on port 35729
+2025-08-08T15:31:12.608+05:30  INFO 13552 --- [ECommerce_application1] [restartedMain] o.s.b.w.e.t.TomcatWebServer              : Tomcat started on port 8081 (http) with context path '/'
+2025-08-08T15:31:12.654+05:30  INFO 13552 --- [ECommerce_application1] [restartedMain] o.a.k.c.c.ConsumerConfig                 : ConsumerConfig values: 
+	allow.auto.create.topics = true
+	auto.commit.interval.ms = 5000
+	auto.include.jmx.reporter = true
+	auto.offset.reset = earliest
+	bootstrap.servers = [localhost:9092]
+	check.crcs = true
+	client.dns.lookup = use_all_dns_ips
+	client.id = consumer-product-processor-group-1
+	client.rack = 
+	connections.max.idle.ms = 540000
+	default.api.timeout.ms = 60000
+	enable.auto.commit = false
+	enable.metrics.push = true
+	exclude.internal.topics = true
+	fetch.max.bytes = 52428800
+	fetch.max.wait.ms = 500
+	fetch.min.bytes = 1
+	group.id = product-processor-group
+	group.instance.id = null
+	group.protocol = classic
+	group.remote.assignor = null
+	heartbeat.interval.ms = 3000
+	interceptor.classes = []
+	internal.leave.group.on.close = true
+	internal.throw.on.fetch.stable.offset.unsupported = false
+	isolation.level = read_uncommitted
+	key.deserializer = class org.apache.kafka.common.serialization.StringDeserializer
+	max.partition.fetch.bytes = 1048576
+	max.poll.interval.ms = 300000
+	max.poll.records = 500
+	metadata.max.age.ms = 300000
+	metric.reporters = []
+	metrics.num.samples = 2
+	metrics.recording.level = INFO
+	metrics.sample.window.ms = 30000
+	partition.assignment.strategy = [class org.apache.kafka.clients.consumer.RangeAssignor, class org.apache.kafka.clients.consumer.CooperativeStickyAssignor]
+	receive.buffer.bytes = 65536
+	reconnect.backoff.max.ms = 1000
+	reconnect.backoff.ms = 50
+	request.timeout.ms = 30000
+	retry.backoff.max.ms = 1000
+	retry.backoff.ms = 100
+	sasl.client.callback.handler.class = null
+	sasl.jaas.config = null
+	sasl.kerberos.kinit.cmd = /usr/bin/kinit
+	sasl.kerberos.min.time.before.relogin = 60000
+	sasl.kerberos.service.name = null
+	sasl.kerberos.ticket.renew.jitter = 0.05
+	sasl.kerberos.ticket.renew.window.factor = 0.8
+	sasl.login.callback.handler.class = null
+	sasl.login.class = null
+	sasl.login.connect.timeout.ms = null
+	sasl.login.read.timeout.ms = null
+	sasl.login.refresh.buffer.seconds = 300
+	sasl.login.refresh.min.period.seconds = 60
+	sasl.login.refresh.window.factor = 0.8
+	sasl.login.refresh.window.jitter = 0.05
+	sasl.login.retry.backoff.max.ms = 10000
+	sasl.login.retry.backoff.ms = 100
+	sasl.mechanism = GSSAPI
+	sasl.oauthbearer.clock.skew.seconds = 30
+	sasl.oauthbearer.expected.audience = null
+	sasl.oauthbearer.expected.issuer = null
+	sasl.oauthbearer.jwks.endpoint.refresh.ms = 3600000
+	sasl.oauthbearer.jwks.endpoint.retry.backoff.max.ms = 10000
+	sasl.oauthbearer.jwks.endpoint.retry.backoff.ms = 100
+	sasl.oauthbearer.jwks.endpoint.url = null
+	sasl.oauthbearer.scope.claim.name = scope
+	sasl.oauthbearer.sub.claim.name = sub
+	sasl.oauthbearer.token.endpoint.url = null
+	security.protocol = PLAINTEXT
+	security.providers = null
+	send.buffer.bytes = 131072
+	session.timeout.ms = 45000
+	socket.connection.setup.timeout.max.ms = 30000
+	socket.connection.setup.timeout.ms = 10000
+	ssl.cipher.suites = null
+	ssl.enabled.protocols = [TLSv1.2, TLSv1.3]
+	ssl.endpoint.identification.algorithm = https
+	ssl.engine.factory.class = null
+	ssl.key.password = null
+	ssl.keymanager.algorithm = SunX509
+	ssl.keystore.certificate.chain = null
+	ssl.keystore.key = null
+	ssl.keystore.location = null
+	ssl.keystore.password = null
+	ssl.keystore.type = JKS
+	ssl.protocol = TLSv1.3
+	ssl.provider = null
+	ssl.secure.random.implementation = null
+	ssl.trustmanager.algorithm = PKIX
+	ssl.truststore.certificates = null
+	ssl.truststore.location = null
+	ssl.truststore.password = null
+	ssl.truststore.type = JKS
+	value.deserializer = class org.apache.kafka.common.serialization.StringDeserializer
+
+2025-08-08T15:31:12.716+05:30  INFO 13552 --- [ECommerce_application1] [restartedMain] o.a.k.c.t.i.KafkaMetricsCollector        : initializing Kafka metrics collector
+2025-08-08T15:31:12.825+05:30  INFO 13552 --- [ECommerce_application1] [restartedMain] o.a.k.c.u.AppInfoParser                  : Kafka version: 3.7.2
+2025-08-08T15:31:12.825+05:30  INFO 13552 --- [ECommerce_application1] [restartedMain] o.a.k.c.u.AppInfoParser                  : Kafka commitId: 79a8f2b5f44f9d5a
+2025-08-08T15:31:12.825+05:30  INFO 13552 --- [ECommerce_application1] [restartedMain] o.a.k.c.u.AppInfoParser                  : Kafka startTimeMs: 1754647272823
+2025-08-08T15:31:12.830+05:30  INFO 13552 --- [ECommerce_application1] [restartedMain] o.a.k.c.c.i.LegacyKafkaConsumer          : [Consumer clientId=consumer-product-processor-group-1, groupId=product-processor-group] Subscribed to topic(s): bulk-upload.products
+2025-08-08T15:31:12.848+05:30  INFO 13552 --- [ECommerce_application1] [restartedMain] c.a.ECommerceApplication1Application     : Started ECommerceApplication1Application in 8.228 seconds (process running for 9.95)
+2025-08-08T15:31:12.975+05:30 DEBUG 13552 --- [ECommerce_application1] [restartedMain] o.h.SQL                                  : 
+    /* <criteria> */ select
+        r1_0.id,
+        r1_0.name 
+    from
+        app_role r1_0 
+    where
+        r1_0.name=?
+2025-08-08T15:31:12.977+05:30 TRACE 13552 --- [ECommerce_application1] [restartedMain] o.h.o.j.bind                             : binding parameter (1:VARCHAR) <- [ROLE_SUPER_ADMIN]
+2025-08-08T15:31:13.007+05:30 DEBUG 13552 --- [ECommerce_application1] [restartedMain] o.h.SQL                                  : 
+    /* <criteria> */ select
+        r1_0.id,
+        r1_0.name 
+    from
+        app_role r1_0 
+    where
+        r1_0.name=?
+2025-08-08T15:31:13.008+05:30 TRACE 13552 --- [ECommerce_application1] [restartedMain] o.h.o.j.bind                             : binding parameter (1:VARCHAR) <- [ROLE_ADMIN]
+2025-08-08T15:31:13.011+05:30 DEBUG 13552 --- [ECommerce_application1] [restartedMain] o.h.SQL                                  : 
+    /* <criteria> */ select
+        r1_0.id,
+        r1_0.name 
+    from
+        app_role r1_0 
+    where
+        r1_0.name=?
+2025-08-08T15:31:13.012+05:30 TRACE 13552 --- [ECommerce_application1] [restartedMain] o.h.o.j.bind                             : binding parameter (1:VARCHAR) <- [ROLE_USER]
+2025-08-08T15:31:13.015+05:30 DEBUG 13552 --- [ECommerce_application1] [restartedMain] o.h.SQL                                  : 
+    /* <criteria> */ select
+        r1_0.id,
+        r1_0.name 
+    from
+        app_role r1_0 
+    where
+        r1_0.name=?
+2025-08-08T15:31:13.015+05:30 TRACE 13552 --- [ECommerce_application1] [restartedMain] o.h.o.j.bind                             : binding parameter (1:VARCHAR) <- [ROLE_CUSTOMER]
+2025-08-08T15:31:13.033+05:30 DEBUG 13552 --- [ECommerce_application1] [restartedMain] o.h.SQL                                  : 
+    /* SELECT
+        u 
+    FROM
+        User u 
+    LEFT JOIN
+        
+    FETCH
+        u.roles 
+    WHERE
+        u.username = :username */ select
+            u1_0.id,
+            u1_0.user_type,
+            u1_0.email,
+            u1_0.password,
+            r1_0.user_id,
+            r1_1.id,
+            r1_1.name,
+            u1_0.username,
+            u1_2.customer_code,
+            u1_2.id 
+        from
+            users u1_0 
+        left join
+            admins u1_1 
+                on u1_0.id=u1_1.id 
+        left join
+            customer u1_2 
+                on u1_0.id=u1_2.id 
+        left join
+            super_admins u1_3 
+                on u1_0.id=u1_3.id 
+        left join
+            user_roles r1_0 
+                on u1_0.id=r1_0.user_id 
+        left join
+            app_role r1_1 
+                on r1_1.id=r1_0.role_id 
+        where
+            u1_0.username=?
+2025-08-08T15:31:13.034+05:30 TRACE 13552 --- [ECommerce_application1] [restartedMain] o.h.o.j.bind                             : binding parameter (1:VARCHAR) <- [superadmin]
+2025-08-08T15:31:13.302+05:30  INFO 13552 --- [ECommerce_application1] [org.springframework.kafka.KafkaListenerEndpointContainer#0-0-C-1] o.a.k.c.Metadata                         : [Consumer clientId=consumer-product-processor-group-1, groupId=product-processor-group] Cluster ID: aUVWktp5T2mZm0vHDfzITg
+2025-08-08T15:31:13.303+05:30  INFO 13552 --- [ECommerce_application1] [org.springframework.kafka.KafkaListenerEndpointContainer#0-0-C-1] o.a.k.c.c.i.ConsumerCoordinator          : [Consumer clientId=consumer-product-processor-group-1, groupId=product-processor-group] Discovered group coordinator NLPULTP3403748.FPS.NIHILENT.com:9092 (id: 2147483647 rack: null)
+2025-08-08T15:31:13.307+05:30  INFO 13552 --- [ECommerce_application1] [org.springframework.kafka.KafkaListenerEndpointContainer#0-0-C-1] o.a.k.c.c.i.ConsumerCoordinator          : [Consumer clientId=consumer-product-processor-group-1, groupId=product-processor-group] (Re-)joining group
+2025-08-08T15:31:13.327+05:30  INFO 13552 --- [ECommerce_application1] [org.springframework.kafka.KafkaListenerEndpointContainer#0-0-C-1] o.a.k.c.c.i.ConsumerCoordinator          : [Consumer clientId=consumer-product-processor-group-1, groupId=product-processor-group] Request joining group due to: need to re-join with the given member-id: consumer-product-processor-group-1-9dacb14c-2ef0-48ce-a1e8-318117071625
+2025-08-08T15:31:13.328+05:30  INFO 13552 --- [ECommerce_application1] [org.springframework.kafka.KafkaListenerEndpointContainer#0-0-C-1] o.a.k.c.c.i.ConsumerCoordinator          : [Consumer clientId=consumer-product-processor-group-1, groupId=product-processor-group] (Re-)joining group
+2025-08-08T15:31:13.331+05:30  INFO 13552 --- [ECommerce_application1] [org.springframework.kafka.KafkaListenerEndpointContainer#0-0-C-1] o.a.k.c.c.i.ConsumerCoordinator          : [Consumer clientId=consumer-product-processor-group-1, groupId=product-processor-group] Successfully joined group with generation Generation{generationId=95, memberId='consumer-product-processor-group-1-9dacb14c-2ef0-48ce-a1e8-318117071625', protocol='range'}
+2025-08-08T15:31:13.340+05:30  INFO 13552 --- [ECommerce_application1] [org.springframework.kafka.KafkaListenerEndpointContainer#0-0-C-1] o.a.k.c.c.i.ConsumerCoordinator          : [Consumer clientId=consumer-product-processor-group-1, groupId=product-processor-group] Finished assignment for group at generation 95: {consumer-product-processor-group-1-9dacb14c-2ef0-48ce-a1e8-318117071625=Assignment(partitions=[bulk-upload.products-0])}
+2025-08-08T15:31:13.347+05:30  INFO 13552 --- [ECommerce_application1] [org.springframework.kafka.KafkaListenerEndpointContainer#0-0-C-1] o.a.k.c.c.i.ConsumerCoordinator          : [Consumer clientId=consumer-product-processor-group-1, groupId=product-processor-group] Successfully synced group in generation Generation{generationId=95, memberId='consumer-product-processor-group-1-9dacb14c-2ef0-48ce-a1e8-318117071625', protocol='range'}
+2025-08-08T15:31:13.348+05:30  INFO 13552 --- [ECommerce_application1] [org.springframework.kafka.KafkaListenerEndpointContainer#0-0-C-1] o.a.k.c.c.i.ConsumerCoordinator          : [Consumer clientId=consumer-product-processor-group-1, groupId=product-processor-group] Notifying assignor about the new Assignment(partitions=[bulk-upload.products-0])
+2025-08-08T15:31:13.352+05:30  INFO 13552 --- [ECommerce_application1] [org.springframework.kafka.KafkaListenerEndpointContainer#0-0-C-1] k.c.c.i.ConsumerRebalanceListenerInvoker : [Consumer clientId=consumer-product-processor-group-1, groupId=product-processor-group] Adding newly assigned partitions: bulk-upload.products-0
+2025-08-08T15:31:13.362+05:30  INFO 13552 --- [ECommerce_application1] [org.springframework.kafka.KafkaListenerEndpointContainer#0-0-C-1] o.a.k.c.c.i.ConsumerUtils                : Setting offset for partition bulk-upload.products-0 to the committed offset FetchPosition{offset=35, offsetEpoch=Optional.empty, currentLeader=LeaderAndEpoch{leader=Optional[NLPULTP3403748.FPS.NIHILENT.com:9092 (id: 0 rack: null)], epoch=0}}
+2025-08-08T15:31:13.363+05:30  INFO 13552 --- [ECommerce_application1] [org.springframework.kafka.KafkaListenerEndpointContainer#0-0-C-1] o.s.k.l.KafkaMessageListenerContainer    : product-processor-group: partitions assigned: [bulk-upload.products-0]
+2025-08-08T15:31:27.603+05:30  INFO 13552 --- [ECommerce_application1] [http-nio-8081-exec-2] o.a.c.c.C.[.[.[/]                        : Initializing Spring DispatcherServlet 'dispatcherServlet'
+2025-08-08T15:31:27.604+05:30  INFO 13552 --- [ECommerce_application1] [http-nio-8081-exec-2] o.s.w.s.DispatcherServlet                : Initializing Servlet 'dispatcherServlet'
+2025-08-08T15:31:27.608+05:30  INFO 13552 --- [ECommerce_application1] [http-nio-8081-exec-2] o.s.w.s.DispatcherServlet                : Completed initialization in 3 ms
+2025-08-08T15:31:27.627+05:30 DEBUG 13552 --- [ECommerce_application1] [http-nio-8081-exec-2] o.s.s.w.FilterChainProxy                 : Securing GET /api/products
+2025-08-08T15:31:27.716+05:30 DEBUG 13552 --- [ECommerce_application1] [http-nio-8081-exec-2] c.a.s.UserServiceImpl                    : Attempting to load user with identifier (username/email): akhilar024@gmail.com
+2025-08-08T15:31:27.774+05:30 DEBUG 13552 --- [ECommerce_application1] [http-nio-8081-exec-2] o.h.SQL                                  : 
+    /* SELECT
+        u 
+    FROM
+        User u 
+    LEFT JOIN
+        
+    FETCH
+        u.roles 
+    WHERE
+        u.email = :email */ select
+            u1_0.id,
+            u1_0.user_type,
+            u1_0.email,
+            u1_0.password,
+            r1_0.user_id,
+            r1_1.id,
+            r1_1.name,
+            u1_0.username,
+            u1_2.customer_code,
+            u1_2.id 
+        from
+            users u1_0 
+        left join
+            admins u1_1 
+                on u1_0.id=u1_1.id 
+        left join
+            customer u1_2 
+                on u1_0.id=u1_2.id 
+        left join
+            super_admins u1_3 
+                on u1_0.id=u1_3.id 
+        left join
+            user_roles r1_0 
+                on u1_0.id=r1_0.user_id 
+        left join
+            app_role r1_1 
+                on r1_1.id=r1_0.role_id 
+        where
+            u1_0.email=?
+2025-08-08T15:31:27.775+05:30 TRACE 13552 --- [ECommerce_application1] [http-nio-8081-exec-2] o.h.o.j.bind                             : binding parameter (1:VARCHAR) <- [akhilar024@gmail.com]
+2025-08-08T15:31:27.778+05:30 DEBUG 13552 --- [ECommerce_application1] [http-nio-8081-exec-2] c.a.s.UserServiceImpl                    : Found User by email: akhilar024@gmail.com (ID: 2)
+2025-08-08T15:31:27.792+05:30 DEBUG 13552 --- [ECommerce_application1] [http-nio-8081-exec-2] o.s.s.w.FilterChainProxy                 : Secured GET /api/products
+2025-08-08T15:31:27.815+05:30  INFO 13552 --- [ECommerce_application1] [http-nio-8081-exec-2] c.a.s.ProductServiceImpl                 : Fetching all active products.
+2025-08-08T15:31:27.818+05:30 DEBUG 13552 --- [ECommerce_application1] [http-nio-8081-exec-2] o.h.SQL                                  : 
+    /* <criteria> */ select
+        p1_0.id,
+        p1_0.active,
+        p1_0.category,
+        p1_0.description,
+        p1_0.discount_percentage,
+        p1_0.image_urls,
+        p1_0.name,
+        p1_0.price,
+        p1_0.stock_quantity 
+    from
+        products p1_0 
+    where
+        p1_0.active
+2025-08-08T15:31:27.831+05:30  INFO 13552 --- [ECommerce_application1] [http-nio-8081-exec-2] c.a.s.ProductServiceImpl                 : Found 44 active products.
+2025-08-08T15:31:27.831+05:30 DEBUG 13552 --- [ECommerce_application1] [http-nio-8081-exec-2] c.a.s.ProductServiceImpl                 : Converting product entity to DTO: 2
+2025-08-08T15:31:27.833+05:30 DEBUG 13552 --- [ECommerce_application1] [http-nio-8081-exec-2] c.a.s.ProductServiceImpl                 : Converting product entity to DTO: 3
+2025-08-08T15:31:27.834+05:30 DEBUG 13552 --- [ECommerce_application1] [http-nio-8081-exec-2] c.a.s.ProductServiceImpl                 : Converting product entity to DTO: 4
+2025-08-08T15:31:27.834+05:30 DEBUG 13552 --- [ECommerce_application1] [http-nio-8081-exec-2] c.a.s.ProductServiceImpl                 : Converting product entity to DTO: 6
+2025-08-08T15:31:27.835+05:30 DEBUG 13552 --- [ECommerce_application1] [http-nio-8081-exec-2] c.a.s.ProductServiceImpl                 : Converting product entity to DTO: 7
+2025-08-08T15:31:27.835+05:30 DEBUG 13552 --- [ECommerce_application1] [http-nio-8081-exec-2] c.a.s.ProductServiceImpl                 : Converting product entity to DTO: 8
+2025-08-08T15:31:27.836+05:30 DEBUG 13552 --- [ECommerce_application1] [http-nio-8081-exec-2] c.a.s.ProductServiceImpl                 : Converting product entity to DTO: 9
+2025-08-08T15:31:27.836+05:30 DEBUG 13552 --- [ECommerce_application1] [http-nio-8081-exec-2] c.a.s.ProductServiceImpl                 : Converting product entity to DTO: 10
+2025-08-08T15:31:27.836+05:30 DEBUG 13552 --- [ECommerce_application1] [http-nio-8081-exec-2] c.a.s.ProductServiceImpl                 : Converting product entity to DTO: 11
+2025-08-08T15:31:27.836+05:30 DEBUG 13552 --- [ECommerce_application1] [http-nio-8081-exec-2] c.a.s.ProductServiceImpl                 : Converting product entity to DTO: 12
+2025-08-08T15:31:27.838+05:30 DEBUG 13552 --- [ECommerce_application1] [http-nio-8081-exec-2] c.a.s.ProductServiceImpl                 : Converting product entity to DTO: 13
+2025-08-08T15:31:27.839+05:30 DEBUG 13552 --- [ECommerce_application1] [http-nio-8081-exec-2] c.a.s.ProductServiceImpl                 : Converting product entity to DTO: 14
+2025-08-08T15:31:27.839+05:30 DEBUG 13552 --- [ECommerce_application1] [http-nio-8081-exec-2] c.a.s.ProductServiceImpl                 : Converting product entity to DTO: 15
+2025-08-08T15:31:27.840+05:30 DEBUG 13552 --- [ECommerce_application1] [http-nio-8081-exec-2] c.a.s.ProductServiceImpl                 : Converting product entity to DTO: 16
+2025-08-08T15:31:27.840+05:30 DEBUG 13552 --- [ECommerce_application1] [http-nio-8081-exec-2] c.a.s.ProductServiceImpl                 : Converting product entity to DTO: 17
+2025-08-08T15:31:27.841+05:30 DEBUG 13552 --- [ECommerce_application1] [http-nio-8081-exec-2] c.a.s.ProductServiceImpl                 : Converting product entity to DTO: 18
+2025-08-08T15:31:27.841+05:30 DEBUG 13552 --- [ECommerce_application1] [http-nio-8081-exec-2] c.a.s.ProductServiceImpl                 : Converting product entity to DTO: 19
+2025-08-08T15:31:27.841+05:30 DEBUG 13552 --- [ECommerce_application1] [http-nio-8081-exec-2] c.a.s.ProductServiceImpl                 : Converting product entity to DTO: 20
+2025-08-08T15:31:27.842+05:30 DEBUG 13552 --- [ECommerce_application1] [http-nio-8081-exec-2] c.a.s.ProductServiceImpl                 : Converting product entity to DTO: 21
+2025-08-08T15:31:27.842+05:30 DEBUG 13552 --- [ECommerce_application1] [http-nio-8081-exec-2] c.a.s.ProductServiceImpl                 : Converting product entity to DTO: 22
+2025-08-08T15:31:27.842+05:30 DEBUG 13552 --- [ECommerce_application1] [http-nio-8081-exec-2] c.a.s.ProductServiceImpl                 : Converting product entity to DTO: 23
+2025-08-08T15:31:27.843+05:30 DEBUG 13552 --- [ECommerce_application1] [http-nio-8081-exec-2] c.a.s.ProductServiceImpl                 : Converting product entity to DTO: 24
+2025-08-08T15:31:27.843+05:30 DEBUG 13552 --- [ECommerce_application1] [http-nio-8081-exec-2] c.a.s.ProductServiceImpl                 : Converting product entity to DTO: 25
+2025-08-08T15:31:27.843+05:30 DEBUG 13552 --- [ECommerce_application1] [http-nio-8081-exec-2] c.a.s.ProductServiceImpl                 : Converting product entity to DTO: 26
+2025-08-08T15:31:27.843+05:30 DEBUG 13552 --- [ECommerce_application1] [http-nio-8081-exec-2] c.a.s.ProductServiceImpl                 : Converting product entity to DTO: 27
+2025-08-08T15:31:27.844+05:30 DEBUG 13552 --- [ECommerce_application1] [http-nio-8081-exec-2] c.a.s.ProductServiceImpl                 : Converting product entity to DTO: 28
+2025-08-08T15:31:27.845+05:30 DEBUG 13552 --- [ECommerce_application1] [http-nio-8081-exec-2] c.a.s.ProductServiceImpl                 : Converting product entity to DTO: 29
+2025-08-08T15:31:27.845+05:30 DEBUG 13552 --- [ECommerce_application1] [http-nio-8081-exec-2] c.a.s.ProductServiceImpl                 : Converting product entity to DTO: 30
+2025-08-08T15:31:27.846+05:30 DEBUG 13552 --- [ECommerce_application1] [http-nio-8081-exec-2] c.a.s.ProductServiceImpl                 : Converting product entity to DTO: 31
+2025-08-08T15:31:27.846+05:30 DEBUG 13552 --- [ECommerce_application1] [http-nio-8081-exec-2] c.a.s.ProductServiceImpl                 : Converting product entity to DTO: 34
+2025-08-08T15:31:27.847+05:30 DEBUG 13552 --- [ECommerce_application1] [http-nio-8081-exec-2] c.a.s.ProductServiceImpl                 : Converting product entity to DTO: 251
+2025-08-08T15:31:27.847+05:30 DEBUG 13552 --- [ECommerce_application1] [http-nio-8081-exec-2] c.a.s.ProductServiceImpl                 : Converting product entity to DTO: 252
+2025-08-08T15:31:27.848+05:30 DEBUG 13552 --- [ECommerce_application1] [http-nio-8081-exec-2] c.a.s.ProductServiceImpl                 : Converting product entity to DTO: 253
+2025-08-08T15:31:27.848+05:30 DEBUG 13552 --- [ECommerce_application1] [http-nio-8081-exec-2] c.a.s.ProductServiceImpl                 : Converting product entity to DTO: 283
+2025-08-08T15:31:27.849+05:30 DEBUG 13552 --- [ECommerce_application1] [http-nio-8081-exec-2] c.a.s.ProductServiceImpl                 : Converting product entity to DTO: 294
+2025-08-08T15:31:27.849+05:30 DEBUG 13552 --- [ECommerce_application1] [http-nio-8081-exec-2] c.a.s.ProductServiceImpl                 : Converting product entity to DTO: 295
+2025-08-08T15:31:27.849+05:30 DEBUG 13552 --- [ECommerce_application1] [http-nio-8081-exec-2] c.a.s.ProductServiceImpl                 : Converting product entity to DTO: 300
+2025-08-08T15:31:27.849+05:30 DEBUG 13552 --- [ECommerce_application1] [http-nio-8081-exec-2] c.a.s.ProductServiceImpl                 : Converting product entity to DTO: 301
+2025-08-08T15:31:27.849+05:30 DEBUG 13552 --- [ECommerce_application1] [http-nio-8081-exec-2] c.a.s.ProductServiceImpl                 : Converting product entity to DTO: 302
+2025-08-08T15:31:27.850+05:30 DEBUG 13552 --- [ECommerce_application1] [http-nio-8081-exec-2] c.a.s.ProductServiceImpl                 : Converting product entity to DTO: 303
+2025-08-08T15:31:27.850+05:30 DEBUG 13552 --- [ECommerce_application1] [http-nio-8081-exec-2] c.a.s.ProductServiceImpl                 : Converting product entity to DTO: 304
+2025-08-08T15:31:27.851+05:30 DEBUG 13552 --- [ECommerce_application1] [http-nio-8081-exec-2] c.a.s.ProductServiceImpl                 : Converting product entity to DTO: 305
+2025-08-08T15:31:27.851+05:30 DEBUG 13552 --- [ECommerce_application1] [http-nio-8081-exec-2] c.a.s.ProductServiceImpl                 : Converting product entity to DTO: 320
+2025-08-08T15:31:27.852+05:30 DEBUG 13552 --- [ECommerce_application1] [http-nio-8081-exec-2] c.a.s.ProductServiceImpl                 : Converting product entity to DTO: 321
+2025-08-08T15:32:03.722+05:30  INFO 13552 --- [ECommerce_application1] [File Watcher] rtingClassPathChangeChangedEventListener : Restarting due to 1 class path change (0 additions, 0 deletions, 1 modification)
+2025-08-08T15:32:03.729+05:30  INFO 13552 --- [ECommerce_application1] [org.springframework.kafka.KafkaListenerEndpointContainer#0-0-C-1] k.c.c.i.ConsumerRebalanceListenerInvoker : [Consumer clientId=consumer-product-processor-group-1, groupId=product-processor-group] Revoke previously assigned partitions bulk-upload.products-0
+2025-08-08T15:32:03.730+05:30  INFO 13552 --- [ECommerce_application1] [org.springframework.kafka.KafkaListenerEndpointContainer#0-0-C-1] o.s.k.l.KafkaMessageListenerContainer    : product-processor-group: partitions revoked: [bulk-upload.products-0]
+2025-08-08T15:32:03.731+05:30  INFO 13552 --- [ECommerce_application1] [org.springframework.kafka.KafkaListenerEndpointContainer#0-0-C-1] o.a.k.c.c.i.ConsumerCoordinator          : [Consumer clientId=consumer-product-processor-group-1, groupId=product-processor-group] Member consumer-product-processor-group-1-9dacb14c-2ef0-48ce-a1e8-318117071625 sending LeaveGroup request to coordinator NLPULTP3403748.FPS.NIHILENT.com:9092 (id: 2147483647 rack: null) due to the consumer unsubscribed from all topics
+2025-08-08T15:32:03.731+05:30  INFO 13552 --- [ECommerce_application1] [org.springframework.kafka.KafkaListenerEndpointContainer#0-0-C-1] o.a.k.c.c.i.ConsumerCoordinator          : [Consumer clientId=consumer-product-processor-group-1, groupId=product-processor-group] Resetting generation and member id due to: consumer pro-actively leaving the group
+2025-08-08T15:32:03.732+05:30  INFO 13552 --- [ECommerce_application1] [org.springframework.kafka.KafkaListenerEndpointContainer#0-0-C-1] o.a.k.c.c.i.ConsumerCoordinator          : [Consumer clientId=consumer-product-processor-group-1, groupId=product-processor-group] Request joining group due to: consumer pro-actively leaving the group
+2025-08-08T15:32:03.732+05:30  INFO 13552 --- [ECommerce_application1] [org.springframework.kafka.KafkaListenerEndpointContainer#0-0-C-1] o.a.k.c.c.i.LegacyKafkaConsumer          : [Consumer clientId=consumer-product-processor-group-1, groupId=product-processor-group] Unsubscribed all topics or patterns and assigned partitions
+2025-08-08T15:32:03.734+05:30  INFO 13552 --- [ECommerce_application1] [org.springframework.kafka.KafkaListenerEndpointContainer#0-0-C-1] o.a.k.c.c.i.ConsumerCoordinator          : [Consumer clientId=consumer-product-processor-group-1, groupId=product-processor-group] Resetting generation and member id due to: consumer pro-actively leaving the group
+2025-08-08T15:32:03.734+05:30  INFO 13552 --- [ECommerce_application1] [org.springframework.kafka.KafkaListenerEndpointContainer#0-0-C-1] o.a.k.c.c.i.ConsumerCoordinator          : [Consumer clientId=consumer-product-processor-group-1, groupId=product-processor-group] Request joining group due to: consumer pro-actively leaving the group
+2025-08-08T15:32:04.044+05:30  INFO 13552 --- [ECommerce_application1] [org.springframework.kafka.KafkaListenerEndpointContainer#0-0-C-1] o.a.k.c.m.Metrics                        : Metrics scheduler closed
+2025-08-08T15:32:04.044+05:30  INFO 13552 --- [ECommerce_application1] [org.springframework.kafka.KafkaListenerEndpointContainer#0-0-C-1] o.a.k.c.m.Metrics                        : Closing reporter org.apache.kafka.common.metrics.JmxReporter
+2025-08-08T15:32:04.045+05:30  INFO 13552 --- [ECommerce_application1] [org.springframework.kafka.KafkaListenerEndpointContainer#0-0-C-1] o.a.k.c.m.Metrics                        : Closing reporter org.apache.kafka.common.telemetry.internals.ClientTelemetryReporter
+2025-08-08T15:32:04.045+05:30  INFO 13552 --- [ECommerce_application1] [org.springframework.kafka.KafkaListenerEndpointContainer#0-0-C-1] o.a.k.c.m.Metrics                        : Metrics reporters closed
+2025-08-08T15:32:04.059+05:30  INFO 13552 --- [ECommerce_application1] [org.springframework.kafka.KafkaListenerEndpointContainer#0-0-C-1] o.a.k.c.u.AppInfoParser                  : App info kafka.consumer for consumer-product-processor-group-1 unregistered
+2025-08-08T15:32:04.059+05:30  INFO 13552 --- [ECommerce_application1] [org.springframework.kafka.KafkaListenerEndpointContainer#0-0-C-1] o.s.k.l.KafkaMessageListenerContainer    : product-processor-group: Consumer stopped
+2025-08-08T15:32:04.129+05:30  INFO 13552 --- [ECommerce_application1] [Thread-5] j.LocalContainerEntityManagerFactoryBean : Closing JPA EntityManagerFactory for persistence unit 'default'
+2025-08-08T15:32:04.132+05:30  INFO 13552 --- [ECommerce_application1] [Thread-5] c.z.h.HikariDataSource                   : HikariPool-1 - Shutdown initiated...
+2025-08-08T15:32:04.143+05:30  INFO 13552 --- [ECommerce_application1] [Thread-5] c.z.h.HikariDataSource                   : HikariPool-1 - Shutdown completed.

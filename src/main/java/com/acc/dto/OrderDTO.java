@@ -1,10 +1,13 @@
 package com.acc.dto;
+
 import java.time.LocalDateTime;
 import java.math.BigDecimal; 
 import java.util.List;
+
 public class OrderDTO {
     private Long id; 
-    private String customerCode; 
+    private String customerCode;
+    private String orderCode;
     
     private LocalDateTime orderDate;
     private BigDecimal totalAmount; 
@@ -16,8 +19,9 @@ public class OrderDTO {
     private String shippingAddressString; 
     private String customerFirstName; 
     private String customerLastName; 
-    
-    
+    private BigDecimal discountAmount; 
+    private BigDecimal discountedAmount; 
+
     public String getCustomerCode() {
     	return customerCode;
     }
@@ -43,8 +47,14 @@ public class OrderDTO {
     	this.shippingAddressString = shippingAddressString;
     	
     }
+    public String getOrderCode() {
+        return orderCode;
+    }
 
-    
+    public void setOrderCode(String orderCode) {
+        this.orderCode = orderCode;
+    }
+
     public Long getAddressId() {
         return addressId;
     }
@@ -110,6 +120,19 @@ public class OrderDTO {
 		this.status = status;
 	}
 
-	
+    public BigDecimal getDiscountAmount() { 
+        return discountAmount;
+    }
 
+    public void setDiscountAmount(BigDecimal discountAmount) { 
+        this.discountAmount = discountAmount;
+    }
+
+    public BigDecimal getDiscountedAmount() { 
+        return discountedAmount;
+    }
+
+    public void setDiscountedAmount(BigDecimal discountedAmount) { 
+        this.discountedAmount = discountedAmount;
+    }
 }

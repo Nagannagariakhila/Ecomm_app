@@ -110,4 +110,9 @@ public class CartItem {
                ", price=" + price +
                '}';
     }
+
+	public BigDecimal getDiscountedPrice() {
+		
+		return null;
+	}
 }

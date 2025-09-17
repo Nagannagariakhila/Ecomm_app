@@ -1,10 +1,12 @@
 package com.acc.entity;
+
 import jakarta.persistence.*;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects; 
+import java.util.Objects;
+
 @Entity
 @Table(name = "carts")
 public class Cart {
@@ -23,21 +25,29 @@ public class Cart {
     @Column(nullable = false)
     private LocalDateTime updatedAt;
 
-    @Column(nullable = false) 
-    private BigDecimal totalAmount;
+    @Column(nullable = false)
+    private BigDecimal totalAmount; 
+
+    @Column(nullable = false)
+    private BigDecimal discountAmount;
+
+    @Column(nullable = false)
+    private BigDecimal discountedAmount; 
 
     @OneToMany(mappedBy = "cart", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<CartItem> cartItems = new ArrayList<>();
-    public Cart() {
-        
-    }
 
-    public Cart(Long id, Customer customer, LocalDateTime createdAt, LocalDateTime updatedAt, BigDecimal totalAmount, List<CartItem> cartItems) {
+    public Cart() {}
+
+    public Cart(Long id, Customer customer, LocalDateTime createdAt, LocalDateTime updatedAt, BigDecimal totalAmount, BigDecimal discountAmount, BigDecimal discountedAmount, List<CartItem> cartItems) {
         this.id = id;
         this.customer = customer;
         this.createdAt = createdAt;
         this.updatedAt = updatedAt;
-        this.totalAmount = totalAmount;
+        this.totalAmount = totalAmount != null ? totalAmount : BigDecimal.ZERO;
+        this.discountAmount = discountAmount != null ? discountAmount : BigDecimal.ZERO;
+        this.discountedAmount = discountedAmount != null ? discountedAmount : BigDecimal.ZERO;
+
         if (cartItems != null) {
             this.cartItems = new ArrayList<>(cartItems);
             this.cartItems.forEach(item -> item.setCart(this));
@@ -46,61 +56,36 @@ public class Cart {
         }
     }
 
-    public Long getId() {
-        return id;
-    }
+   
+    public Long getId() { return id; }
+    public Customer getCustomer() { return customer; }
+    public LocalDateTime getCreatedAt() { return createdAt; }
+    public LocalDateTime getUpdatedAt() { return updatedAt; }
+    public BigDecimal getTotalAmount() { return totalAmount; }
+    public BigDecimal getDiscountAmount() { return discountAmount; }
+    public BigDecimal getDiscountedAmount() { return discountedAmount; }
+    public List<CartItem> getCartItems() { return cartItems; }
 
-    public Customer getCustomer() {
-        return customer;
-    }
+    
+    public void setId(Long id) { this.id = id; }
+    public void setCustomer(Customer customer) { this.customer = customer; }
+    public void setCreatedAt(LocalDateTime createdAt) { this.createdAt = createdAt; }
+    public void setUpdatedAt(LocalDateTime updatedAt) { this.updatedAt = updatedAt; }
+    public void setTotalAmount(BigDecimal totalAmount) { this.totalAmount = totalAmount; }
+    public void setDiscountAmount(BigDecimal discountAmount) { this.discountAmount = discountAmount; }
+    public void setDiscountedAmount(BigDecimal discountedAmount) { this.discountedAmount = discountedAmount; }
 
-    public LocalDateTime getCreatedAt() {
-        return createdAt;
-    }
-
-    public LocalDateTime getUpdatedAt() {
-        return updatedAt;
-    }
-
-    public BigDecimal getTotalAmount() {
-        return totalAmount;
-    }
-
-    public List<CartItem> getCartItems() {
-        return cartItems;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public void setCustomer(Customer customer) {
-        this.customer = customer;
-    }
-
-    public void setCreatedAt(LocalDateTime createdAt) {
-        this.createdAt = createdAt;
-    }
-
-    public void setUpdatedAt(LocalDateTime updatedAt) {
-        this.updatedAt = updatedAt;
-    }
-
-    public void setTotalAmount(BigDecimal totalAmount) {
-        this.totalAmount = totalAmount;
-    }
     public void setCartItems(List<CartItem> cartItems) {
         this.cartItems.clear();
         if (cartItems != null) {
             for (CartItem item : cartItems) {
-                this.addCartItem(item); 
+                this.addCartItem(item);
             }
         }
     }
+
     public void addCartItem(CartItem cartItem) {
-        if (cartItems == null) {
-            cartItems = new ArrayList<>();
-        }
+        if (cartItems == null) cartItems = new ArrayList<>();
         cartItems.add(cartItem);
         cartItem.setCart(this);
     }
@@ -116,42 +101,55 @@ public class Cart {
     protected void onCreate() {
         createdAt = LocalDateTime.now();
         updatedAt = LocalDateTime.now();
-        if (totalAmount == null) {
-            totalAmount = BigDecimal.ZERO;
-        }
+        if (totalAmount == null) totalAmount = BigDecimal.ZERO;
+        if (discountAmount == null) discountAmount = BigDecimal.ZERO;
+        if (discountedAmount == null) discountedAmount = BigDecimal.ZERO;
     }
 
     @PreUpdate
     protected void onUpdate() {
         updatedAt = LocalDateTime.now();
     }
+
+    
+    public void recalculateTotals() {
+        totalAmount = BigDecimal.ZERO;
+        discountedAmount = BigDecimal.ZERO;
+        discountAmount = BigDecimal.ZERO;
+
+        for (CartItem item : cartItems) {
+            BigDecimal itemTotal = item.getPrice().multiply(BigDecimal.valueOf(item.getQuantity()));
+            BigDecimal itemDiscountedTotal = item.getDiscountedPrice().multiply(BigDecimal.valueOf(item.getQuantity()));
+            totalAmount = totalAmount.add(itemTotal);
+            discountedAmount = discountedAmount.add(itemDiscountedTotal);
+        }
+
+        discountAmount = totalAmount.subtract(discountedAmount);
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (!(o instanceof Cart)) return false;
         Cart cart = (Cart) o;
-        return Objects.equals(id, cart.id); 
+        return Objects.equals(id, cart.id);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id); 
+        return Objects.hash(id);
     }
 
-    
     @Override
     public String toString() {
         return "Cart{" +
-               "id=" + id +
-               ", customerId=" + (customer != null ? customer.getId() : "null") + 
-               ", createdAt=" + createdAt +
-               ", updatedAt=" + updatedAt +
-               ", totalAmount=" + totalAmount +
-               
-               '}';
+                "id=" + id +
+                ", customerId=" + (customer != null ? customer.getId() : null) +
+                ", createdAt=" + createdAt +
+                ", updatedAt=" + updatedAt +
+                ", totalAmount=" + totalAmount +
+                ", discountAmount=" + discountAmount +
+                ", discountedAmount=" + discountedAmount +
+                '}';
     }
-
-	public void setCartItems(Object cartItems2) {
-		
-	}
 }

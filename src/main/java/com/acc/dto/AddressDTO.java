@@ -8,6 +8,7 @@ public class AddressDTO {
     private String zipCode;
     private String type;
     private Long profileId;
+    private boolean active;
 	public Long getId() {
 		return id;
 	}
@@ -56,5 +57,7 @@ public class AddressDTO {
 	public void setProfileId(Long profileId) {
 		this.profileId = profileId;
 	}
+	public boolean isActive() { return active; }
+    public void setActive(boolean active) { this.active = active; }
 
 }
