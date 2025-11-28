@@ -40,7 +40,6 @@ public class InvoiceController {
     
     @GetMapping("/generate/pdf/customer/{customerCode}")
     public ResponseEntity<byte[]> generatePdfInvoiceForCustomer(@PathVariable String customerCode) throws DocumentException, IOException {
-        // Assume you have a method in InvoiceService to generate an invoice based on customer code
         Invoice invoice = invoiceService.generateInvoiceByCustomerCode(customerCode);
         byte[] pdfBytes = invoiceService.generatePdfInvoice(invoice);
         HttpHeaders headers = new HttpHeaders();

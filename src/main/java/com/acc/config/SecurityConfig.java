@@ -26,7 +26,7 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 
 @Configuration
 @EnableWebSecurity
-@EnableMethodSecurity(prePostEnabled = true) 
+@EnableMethodSecurity(prePostEnabled = true)
 public class SecurityConfig {
 
     @Lazy
@@ -35,7 +35,7 @@ public class SecurityConfig {
 
     @Lazy
     @Autowired
-    private JwtFilter jwtFilter;
+    private JwtFilter jwtFilter; 
 
     @Bean
     public PasswordEncoder passwordEncoder() {
@@ -57,94 +57,105 @@ public class SecurityConfig {
 
     @Bean
     public RoleHierarchy roleHierarchy() {
-        RoleHierarchyImpl roleHierarchy = new RoleHierarchyImpl();
-        String hierarchy = "ROLE_SUPER_ADMIN > ROLE_ADMIN \n ROLE_ADMIN > ROLE_CUSTOMER \n ROLE_CUSTOMER > ROLE_USER";
-        roleHierarchy.setHierarchy(hierarchy);
-        return roleHierarchy;
+        RoleHierarchyImpl hierarchy = new RoleHierarchyImpl();
+        String roles = """
+                ROLE_SUPER_ADMIN > ROLE_ADMIN
+                ROLE_ADMIN > ROLE_CUSTOMER
+                ROLE_CUSTOMER > ROLE_USER
+                """;
+        hierarchy.setHierarchy(roles);
+        return hierarchy;
     }
 
     private DefaultWebSecurityExpressionHandler webSecurityExpressionHandler() {
-        DefaultWebSecurityExpressionHandler expressionHandler = new DefaultWebSecurityExpressionHandler();
-        expressionHandler.setRoleHierarchy(roleHierarchy());
-        return expressionHandler;
+        DefaultWebSecurityExpressionHandler handler = new DefaultWebSecurityExpressionHandler();
+        handler.setRoleHierarchy(roleHierarchy());
+        return handler;
     }
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+
         http
-                .csrf(AbstractHttpConfigurer::disable)
-                .cors(Customizer.withDefaults())
-                .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-                .authorizeHttpRequests(authorize -> authorize
-                        .withObjectPostProcessor(new ObjectPostProcessor<DefaultWebSecurityExpressionHandler>() {
-                            @Override
-                            public <O extends DefaultWebSecurityExpressionHandler> O postProcess(O object) {
-                                object.setRoleHierarchy(roleHierarchy());
-                                return object;
-                            }
-                        })
+            .csrf(AbstractHttpConfigurer::disable)
+            .cors(Customizer.withDefaults())
+            .sessionManagement(session ->
+                        session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+            .authorizeHttpRequests(authorize -> authorize
+                .withObjectPostProcessor(new ObjectPostProcessor<DefaultWebSecurityExpressionHandler>() {
+                    @Override
+                    public <O extends DefaultWebSecurityExpressionHandler> O postProcess(O object) {
+                        object.setRoleHierarchy(roleHierarchy());
+                        return object;
+                    }
+                })
 
+                
+                .requestMatchers(HttpMethod.GET, "/api/products/**").permitAll()
+                .requestMatchers(HttpMethod.GET, "/api/categories/**").permitAll()
+
+                
+                .requestMatchers(
+                    "/api/auth/register",
+                    "/api/auth/login",
+                    "/api/auth/otp/generate",
+                    "/api/auth/otp/verify",
+                    "/api/superadmin/register",
+                    "/api/superadmin/login",
+                    "/api/customers/email/**",
+                    "/api/profiles/**",
+                    "/error"
+                ).permitAll()
+
+                // *** FIX APPLIED HERE: Allowing ROLE_CUSTOMER to use /api/coupons/apply ***
+                .requestMatchers(HttpMethod.POST, "/api/coupons/apply").hasAnyAuthority("ROLE_ADMIN", "ROLE_CUSTOMER")
+                // Other coupon rules
+                .requestMatchers(HttpMethod.GET, "/api/coupons").hasAnyAuthority("ROLE_ADMIN", "ROLE_CUSTOMER")
+                .requestMatchers(HttpMethod.POST, "/api/coupons").hasAuthority("ROLE_ADMIN")
+                .requestMatchers("/api/coupons/**").hasAuthority("ROLE_ADMIN")
+
+                
+                .requestMatchers(HttpMethod.POST, "/api/products").hasAuthority("ROLE_ADMIN")
+                .requestMatchers(HttpMethod.PUT, "/api/products/**").hasAuthority("ROLE_ADMIN")
+                .requestMatchers(HttpMethod.DELETE, "/api/products/**").hasAuthority("ROLE_ADMIN")
+                .requestMatchers(HttpMethod.POST, "/api/products/upload").hasAuthority("ROLE_ADMIN")
+
+                
+                .requestMatchers(HttpMethod.GET, "/api/customers/all").hasAuthority("ROLE_ADMIN")
+                .requestMatchers(HttpMethod.GET, "/api/orders").hasAuthority("ROLE_ADMIN")
+                .requestMatchers("/api/auth/admin/welcome").hasAuthority("ROLE_ADMIN")
+
+            
+                .requestMatchers("/api/auth/superadmin/welcome").hasAuthority("ROLE_SUPER_ADMIN")
+                .requestMatchers("/api/superadmin/dashboard").hasAuthority("ROLE_SUPER_ADMIN")
+                .requestMatchers(HttpMethod.GET, "/api/superadmin/users").hasAuthority("ROLE_SUPER_ADMIN")
+                .requestMatchers(HttpMethod.PUT, "/api/superadmin/users/roles").hasAuthority("ROLE_SUPER_ADMIN")
+
+                
+                .requestMatchers(HttpMethod.PUT, "/api/carts/customer/*/items/*")
+                        .hasAnyAuthority("ROLE_CUSTOMER", "ROLE_ADMIN")
+                .requestMatchers(HttpMethod.POST, "/api/carts/customer/*/items")
+                        .hasAnyAuthority("ROLE_CUSTOMER", "ROLE_ADMIN")
+                .requestMatchers(HttpMethod.GET, "/api/carts/customer/{customerId}")
+                        .hasAnyAuthority("ROLE_CUSTOMER", "ROLE_ADMIN")
+                .requestMatchers(HttpMethod.GET, "/api/orders/customer/**")
+                        .hasAnyAuthority("ROLE_CUSTOMER", "ROLE_ADMIN")
+                .requestMatchers(HttpMethod.POST, "/api/orders", "/api/orders/customer/**")
+                        .hasAnyAuthority("ROLE_CUSTOMER", "ROLE_ADMIN")
+                .requestMatchers(HttpMethod.GET, "/api/payments")
+                        .hasAnyAuthority("ROLE_CUSTOMER", "ROLE_ADMIN")
+                .requestMatchers("/api/auth/user/welcome")
+                        .hasAnyAuthority("ROLE_CUSTOMER", "ROLE_ADMIN", "ROLE_USER", "ROLE_SUPER_ADMIN")
+                
+                
+                .requestMatchers(HttpMethod.POST, "/api/reviews/products/**")
+                .hasAnyAuthority("ROLE_CUSTOMER", "ROLE_ADMIN")
                         
-                        .requestMatchers(
-                            "/api/auth/register",
-                            "/api/auth/login",
-                            "/api/auth/otp/generate",
-                            "/api/auth/otp/verify",
-                            "/api/superadmin/register",
-                            "/api/superadmin/login",
-                            "/api/categories",
-                            "/api/products/**",
-                            "/api/customers/email/**",
-                            "/api/profiles/**"
-                        ).permitAll()
-
-                        .requestMatchers(HttpMethod.GET, "/api/coupons").hasAnyAuthority("ROLE_ADMIN", "ROLE_CUSTOMER")
-                        .requestMatchers(HttpMethod.POST, "/api/coupons").hasAuthority("ROLE_ADMIN")
-                        .requestMatchers(HttpMethod.GET, "/api/invoices").hasAuthority("ROLE_ADMIN")
-                        .requestMatchers(HttpMethod.PUT, "/api/coupons/**").hasAuthority("ROLE_ADMIN")
-                        .requestMatchers(HttpMethod.DELETE, "/api/coupons/**").hasAuthority("ROLE_ADMIN")
-                        .requestMatchers(HttpMethod.GET, "/api/coupons/**").hasAuthority("ROLE_ADMIN")
-
-                        .requestMatchers(HttpMethod.POST, "/api/products").hasAuthority("ROLE_ADMIN")
-                        .requestMatchers(HttpMethod.PUT, "/api/products/**").hasAuthority("ROLE_ADMIN")
-                        .requestMatchers(HttpMethod.DELETE, "/api/products/**").hasAuthority("ROLE_ADMIN")
-                        .requestMatchers(HttpMethod.POST, "/api/products/upload").hasAuthority("ROLE_ADMIN")
-                        .requestMatchers(HttpMethod.GET, "/api/customers/all").hasAuthority("ROLE_ADMIN")
-                        .requestMatchers(HttpMethod.PUT, "/api/payments/**").hasAuthority("ROLE_ADMIN")
-                        .requestMatchers(HttpMethod.PATCH, "/api/payments/**").hasAuthority("ROLE_ADMIN")
-                        .requestMatchers(HttpMethod.GET, "/api/orders").hasAuthority("ROLE_ADMIN")
-                        .requestMatchers("/api/auth/admin/welcome").hasAuthority("ROLE_ADMIN")
-
-                       
-                        .requestMatchers("/api/auth/superadmin/welcome").hasAuthority("ROLE_SUPER_ADMIN")
-                        .requestMatchers("/api/superadmin/dashboard").hasAuthority("ROLE_SUPER_ADMIN")
-                        
-                        .requestMatchers(HttpMethod.PUT, "/api/superadmin/users/roles").hasAuthority("ROLE_SUPER_ADMIN")
-
-
-                        
-                        .requestMatchers(HttpMethod.PUT, "/api/carts/customer/*/items/*").hasAnyAuthority("ROLE_CUSTOMER", "ROLE_ADMIN")
-                        .requestMatchers(HttpMethod.POST, "/api/carts/customer/*/items").hasAnyAuthority("ROLE_CUSTOMER", "ROLE_ADMIN")
-                        .requestMatchers(HttpMethod.GET, "/api/carts/customer/{customerId}").hasAnyAuthority("ROLE_CUSTOMER", "ROLE_ADMIN")
-                        .requestMatchers(HttpMethod.GET, "/api/orders/customer/**").hasAnyAuthority("ROLE_CUSTOMER", "ROLE_ADMIN")
-                        .requestMatchers(HttpMethod.POST, "/api/orders").hasAnyAuthority("ROLE_CUSTOMER", "ROLE_ADMIN")
-                        .requestMatchers(HttpMethod.POST, "/api/orders/customer/**").hasAnyAuthority("ROLE_CUSTOMER", "ROLE_ADMIN")
-                        .requestMatchers(HttpMethod.GET, "/api/payments").hasAnyAuthority("ROLE_CUSTOMER", "ROLE_ADMIN")
-                        .requestMatchers(HttpMethod.GET, "/api/addresses/**").hasAnyAuthority("ROLE_CUSTOMER", "ROLE_ADMIN")
-                        .requestMatchers(HttpMethod.PUT, "/api/addresses/**").hasAnyAuthority("ROLE_CUSTOMER", "ROLE_ADMIN")
-                        .requestMatchers(HttpMethod.POST, "/api/addresses/**").hasAnyAuthority("ROLE_CUSTOMER", "ROLE_ADMIN")
-                        .requestMatchers(HttpMethod.GET, "/api/customers/search").hasAnyAuthority("ROLE_ADMIN", "ROLE_SUPER_ADMIN")
-                        .requestMatchers(HttpMethod.PUT, "/api/customers/**").hasAnyAuthority("ROLE_CUSTOMER", "ROLE_ADMIN")
-                        .requestMatchers(HttpMethod.GET, "/api/customers/**").hasAnyAuthority("ROLE_CUSTOMER", "ROLE_ADMIN")
-                        .requestMatchers(HttpMethod.GET, "/api/invoices").hasAuthority("ROLE_CUSTOMER")
-                        .requestMatchers(HttpMethod.PUT, "/api/profiles/**").hasAnyAuthority("ROLE_CUSTOMER", "ROLE_ADMIN")
-                        .requestMatchers("/api/auth/user/welcome").hasAnyAuthority("ROLE_CUSTOMER", "ROLE_ADMIN", "ROLE_USER", "ROLE_SUPER_ADMIN")
-                        .requestMatchers(HttpMethod.POST, "/api/reviews").hasAnyAuthority("ROLE_CUSTOMER", "ROLE_ADMIN")
-
-                        .anyRequest().authenticated()
-                )
-                .authenticationProvider(authenticationProvider())
-                .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);
+                .requestMatchers(HttpMethod.GET, "/api/reviews/products/**").permitAll()
+                .anyRequest().authenticated()
+            )
+            .authenticationProvider(authenticationProvider())
+            .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);
 
         return http.build();
     }

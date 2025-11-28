@@ -121,8 +121,6 @@ public class CartServiceImpl implements CartService {
         cartItem.setQuantity(newQuantity);
         cartItemRepository.save(cartItem);
         log.debug("Saved cart item with ID: {}", cartItem.getId());
-
-        // Update product stock (decrement)
         product.setStockQuantity(product.getStockQuantity() - quantityToAdd);
         productRepository.save(product);
         log.debug("Updated stock for product ID {}. New quantity: {}", product.getId(), product.getStockQuantity());
@@ -162,16 +160,12 @@ public class CartServiceImpl implements CartService {
                     log.error("Cart item not found for product ID: {} in cart ID: {}", productId, cart.getId());
                     return new ResourceNotFoundException("CartItem", "Product Not Found in Cart", productId);
                 });
-        
-        // This is the correct logic. The stock is the source of truth,
-        // and cart item quantity should not exceed it.
         if (newQuantity > product.getStockQuantity()) {
             log.error("Requested quantity ({}) exceeds available stock ({}) for product: {}",
                     newQuantity, product.getStockQuantity(), product.getName());
             throw new IllegalArgumentException("Not enough stock for product: " + product.getName());
         }
-        
-        // Update the quantity in the cart item
+
         cartItem.setQuantity(newQuantity);
         cartItemRepository.save(cartItem);
 

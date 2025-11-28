@@ -1,5 +1,4 @@
 package com.acc.serviceImpl;
-
 import com.acc.config.JwtUtil;
 import com.acc.dto.*;
 import com.acc.entity.*;
@@ -17,7 +16,6 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
-
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -37,10 +35,6 @@ public class CustomerServiceImpl implements CustomerService {
     @Autowired private JwtUtil jwtUtil;
     @Autowired private CustomerCodeGenerator customerCodeGenerator;
 
-    /**
-     * Helper method to save the customer in a separate transaction and get the ID.
-     * This ensures the ID is available for the main transaction.
-     */
     @Transactional(propagation = Propagation.REQUIRES_NEW)
     private Customer generateAndSaveCustomerCode(Customer customer) {
         log.debug("Entering generateAndSaveCustomerCode method in a new transaction.");
@@ -291,7 +285,6 @@ public class CustomerServiceImpl implements CustomerService {
 
     @Override
     public List<CustomerDTO> searchCustomers(String query) {
-        // TODO: Implement search functionality
         return null;
     }
 }

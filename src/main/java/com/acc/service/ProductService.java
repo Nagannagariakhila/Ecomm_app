@@ -17,11 +17,8 @@ public interface ProductService {
     ProductDTO getProductByProductId(Long productId);
     void deleteProduct(Long productId);
     List<ProductDTO> getAllProducts();
-    
-    // New methods for Elasticsearch-based searching
     List<ProductDocument> searchProducts(String query);
     List<ProductDocument> searchProductsByCategory(String categoryName, String query);
-
     BulkUploadResponse saveProductsFromCsv(MultipartFile file) throws IOException;
     Optional<Product> findById(Long id);
     List<Product> findAll();

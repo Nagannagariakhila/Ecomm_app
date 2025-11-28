@@ -8,7 +8,6 @@ public class OrderDTO {
     private Long id; 
     private String customerCode;
     private String orderCode;
-    
     private LocalDateTime orderDate;
     private BigDecimal totalAmount; 
     private String status; 

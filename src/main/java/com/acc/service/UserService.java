@@ -17,8 +17,6 @@ public interface UserService {
     UserDTO updateUser(Long id, UserDTO userDTO);
     void deleteUser(Long id);
     User save(UserDTO userDto); 
-    
-   
     UserDTO convertToDTO(User user);
 	UserDetails loadUserByUsername(String userName); 
 	 UserDTO updateUserRoles(String identifier, Set<String> newRoleNames);

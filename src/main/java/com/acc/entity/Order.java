@@ -51,7 +51,7 @@ public class Order {
     public BigDecimal getDiscountAmount() { return discountAmount; }
     public void setDiscountAmount(BigDecimal discountAmount) { this.discountAmount = discountAmount; }
     
-    public BigDecimal getDiscountedAmount() { return discountedAmount; } // Added missing getter
+    public BigDecimal getDiscountedAmount() { return discountedAmount; } 
     public void setDiscountedAmount(BigDecimal discountedAmount) { this.discountedAmount = discountedAmount; } // Added missing setter
 
     public String getStatus() { return status; }

@@ -33,9 +33,6 @@ public class ProfileServiceImpl implements ProfileService {
 
     @Autowired
     private OrderRepository orderRepository;
-
-    // ------------------ DTO Conversion ------------------
-
     private ProfileDTO convertToDTO(Profile profile) {
         log.debug("Converting Profile entity to DTO for profile ID: {}", profile.getId());
         ProfileDTO dto = new ProfileDTO();

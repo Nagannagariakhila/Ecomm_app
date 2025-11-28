@@ -12,8 +12,6 @@ public class UserDTO {
     private Set<String> roles = new HashSet<>(); 
 
     public UserDTO() {}
-
-    
     public UserDTO(String username, String password, String email) {
         this.username = username;
         this.password = password;

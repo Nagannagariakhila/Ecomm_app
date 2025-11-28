@@ -4,7 +4,6 @@ import com.acc.dto.PaymentDTO;
 import com.acc.service.PaymentQrCodeService;
 import com.acc.service.PaymentService;
 import com.acc.service.RazorpayService;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -12,8 +11,8 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import com.google.zxing.WriterException;
 import org.springframework.http.MediaType;
-
 import java.io.IOException;
+import java.math.BigDecimal; // Required for handling currency amounts
 import java.util.List;
 import java.util.Map;
 
@@ -36,10 +35,10 @@ public class PaymentController {
             @RequestParam double amount,
             @RequestParam String receiverName) throws WriterException, IOException {
         
-        // This method correctly calls the service method that handles the UPI URL creation
+        
         byte[] qrCode = paymentQrCodeService.generateUpiQrCode(
             receiverName, 
-            "your_upi_id@bank", // Ensure this is your actual UPI ID
+            "your_upi_id@bank", 
             amount, 
             orderCode, 
             300, 
@@ -50,12 +49,16 @@ public class PaymentController {
     }
 
     @PostMapping("/create-order")
-    public ResponseEntity<String> createOrder(@RequestParam int amount) {
+    public ResponseEntity<String> createOrder(@RequestParam BigDecimal amount) { // FIX: Changed type from int to BigDecimal
         try {
-            String razorpayOrder = razorpayService.createOrder(amount);
-            return ResponseEntity.ok(razorpayOrder);
+            // Convert the BigDecimal amount (e.g., 74.52) to an integer 
+            // amount in cents (e.g., 7452) for the Razorpay API.
+            int amountInCents = amount.multiply(new BigDecimal("100")).intValue();
+
+            String razorpayOrder = razorpayService.createOrder(amountInCents); // Passed the integer amount
+    		return ResponseEntity.ok(razorpayOrder);
         } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error: " + e.getMessage());
+    		return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error: " + e.getMessage());
         }
     }
 

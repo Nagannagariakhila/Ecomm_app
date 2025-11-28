@@ -76,7 +76,7 @@ public class InvoiceServiceImpl implements InvoiceService {
             invoice.setCustomerAddress("N/A");
         }
 
-        // Corrected line to use the 'status' field from the Order entity
+       
         invoice.setPaymentStatus(order.getStatus());
 
         List<InvoiceItem> invoiceItems = order.getOrderItems().stream()
@@ -128,12 +128,12 @@ public class InvoiceServiceImpl implements InvoiceService {
         Font statusFont = FontFactory.getFont(FontFactory.HELVETICA_BOLD, 12, BaseColor.BLUE);
         Font totalFont = FontFactory.getFont(FontFactory.HELVETICA_BOLD, 12);
 
-        // Header
+      
         Paragraph header = new Paragraph("Your E-Commerce Store", titleFont);
         header.setAlignment(Element.ALIGN_CENTER);
         document.add(header);
 
-        // Add a line separator
+        
         document.add(new Paragraph("----------------------------------------------------------------------------------------------------------------------------------"));
         document.add(new Paragraph(" "));
 
@@ -142,13 +142,13 @@ public class InvoiceServiceImpl implements InvoiceService {
         document.add(invoiceTitle);
         document.add(new Paragraph(" "));
 
-        // Invoice Details Section
+        
         Paragraph details = new Paragraph();
         details.add(new Phrase("Invoice Number: " + invoice.getInvoiceNumber() + "\n", FontFactory.getFont(FontFactory.HELVETICA, 12)));
         details.add(new Phrase("Invoice Date: " + invoice.getInvoiceDate() + "\n\n", FontFactory.getFont(FontFactory.HELVETICA, 12)));
         document.add(details);
 
-        // Customer Details Section
+       
         Paragraph customerDetails = new Paragraph();
         customerDetails.add(new Phrase("Customer Name: " + invoice.getCustomerName() + "\n", FontFactory.getFont(FontFactory.HELVETICA, 12)));
         customerDetails.add(new Phrase("Customer Email: " + invoice.getCustomerEmail() + "\n", FontFactory.getFont(FontFactory.HELVETICA, 12)));
@@ -181,12 +181,12 @@ public class InvoiceServiceImpl implements InvoiceService {
         document.add(total);
         document.add(new Paragraph(" "));
 
-        // Payment Status added here, below the total amount
+       
         Paragraph paymentStatus = new Paragraph("Payment Status: " + invoice.getPaymentStatus(), statusFont);
         paymentStatus.setAlignment(Element.ALIGN_RIGHT);
         document.add(paymentStatus);
 
-        // Footer
+        
         document.add(new Paragraph(" "));
         document.add(new Paragraph("----------------------------------------------------------------------------------------------------------------------------------"));
         Paragraph footer = new Paragraph("Thank you for your business! For any queries, please contact: support@yourecommercestore.com", headerFooterFont);
@@ -209,6 +209,5 @@ public class InvoiceServiceImpl implements InvoiceService {
 
 	@Override
 	public Invoice generateInvoiceByCustomerCode(String customerCode) {
-		// TODO Auto-generated method stub
 		return null;
 	}}

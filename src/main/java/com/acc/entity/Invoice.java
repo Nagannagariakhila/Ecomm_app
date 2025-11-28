@@ -77,11 +77,5 @@ public class Invoice {
 
 	public void setPaymentStatus(String paymentStatus) {
 		this.paymentStatus = paymentStatus;
-	}
-
-	
-
-	
-    
-    
+	}   
 }

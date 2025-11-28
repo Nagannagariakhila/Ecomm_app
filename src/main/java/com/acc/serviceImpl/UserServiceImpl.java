@@ -45,6 +45,14 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     @Autowired
     private PasswordEncoder passwordEncoder;
 
+  
+    private String getFullRoleName(String roleName) {
+        String upperRoleName = roleName.toUpperCase();
+       
+        return upperRoleName.startsWith("ROLE_") 
+                ? upperRoleName 
+                : "ROLE_" + upperRoleName;
+    }
     @Override
     public UserDTO convertToDTO(User user) {
         UserDTO dto = new UserDTO();
@@ -148,13 +156,18 @@ public class UserServiceImpl implements UserService, UserDetailsService {
         }
 
         if (userDTO.getRoles() != null && !userDTO.getRoles().isEmpty()) {
+            
             Set<Role> newRoles = userDTO.getRoles().stream()
-                    .map(roleName -> roleRepository.findByName("ROLE_" + roleName.toUpperCase())
-                            .orElseThrow(() -> {
-                                log.error("Role not found during update: {}", roleName);
-                                return new IllegalArgumentException("Role not found: " + roleName);
-                            }))
+                    .map(roleName -> {
+                        String fullRoleName = getFullRoleName(roleName);
+                        return roleRepository.findByName(fullRoleName)
+                                .orElseThrow(() -> {
+                                    log.error("Role not found during update: {}", roleName);
+                                    return new IllegalArgumentException("Role not found: " + roleName);
+                                });
+                    })
                     .collect(Collectors.toSet());
+           
             existingUser.setRoles(newRoles);
         }
 
@@ -223,13 +236,18 @@ public class UserServiceImpl implements UserService, UserDetailsService {
         Set<Role> assignedRoles = new HashSet<>();
 
         if (userDto.getRoles() != null && !userDto.getRoles().isEmpty()) {
+         
             assignedRoles = userDto.getRoles().stream()
-                    .map(roleName -> roleRepository.findByName("ROLE_" + roleName.toUpperCase())
-                            .orElseThrow(() -> {
-                                log.error("Role not found during user creation: {}", roleName);
-                                return new IllegalArgumentException("Role not found: " + roleName);
-                            }))
+                    .map(roleName -> {
+                        String fullRoleName = getFullRoleName(roleName);
+                        return roleRepository.findByName(fullRoleName)
+                                .orElseThrow(() -> {
+                                    log.error("Role not found during user creation: {}", roleName);
+                                    return new IllegalArgumentException("Role not found: " + roleName);
+                                });
+                    })
                     .collect(Collectors.toSet());
+           
         } else {
             Role defaultCustomerRole = roleRepository.findByName("ROLE_CUSTOMER")
                     .orElseThrow(() -> {
@@ -275,19 +293,22 @@ public class UserServiceImpl implements UserService, UserDetailsService {
         log.debug("Found user: {} (ID: {})", user.getUsername(), user.getId());
         log.debug("User's current roles: {}", user.getRoles().stream().map(Role::getName).collect(Collectors.joining(", ")));
 
+        
         if (user.getRoles().stream().anyMatch(r -> r.getName().equals("ROLE_SUPER_ADMIN"))) {
             log.error("Attempted to modify roles of a Super Admin. Operation denied.");
             throw new IllegalArgumentException("Cannot modify roles of a Super Admin through this interface.");
         }
 
-        if (newRoleNames.stream().anyMatch(r -> r.equalsIgnoreCase("ROLE_SUPER_ADMIN"))) {
-            log.error("Attempted to assign ROLE_SUPER_ADMIN. Operation denied.");
-            throw new IllegalArgumentException("Cannot assign ROLE_SUPER_ADMIN role.");
-        }
+        // Security check: Deny assignment of Super Admin role through this method
+//        if (newRoleNames.stream().anyMatch(r -> r.equalsIgnoreCase("ROLE_SUPER_ADMIN"))) {
+//            log.error("Attempted to assign ROLE_SUPER_ADMIN. Operation denied.");
+//            throw new IllegalArgumentException("Cannot assign ROLE_SUPER_ADMIN role.");
+//        }
 
+        
         Set<Role> rolesToAssign = newRoleNames.stream()
                 .map(roleName -> {
-                    String fullRoleName = roleName.toUpperCase().startsWith("ROLE_") ? roleName.toUpperCase() : "ROLE_" + roleName.toUpperCase();
+                    String fullRoleName = getFullRoleName(roleName);
                     log.debug("Looking up role: {}", fullRoleName);
                     return roleRepository.findByName(fullRoleName)
                             .orElseThrow(() -> {
@@ -296,6 +317,8 @@ public class UserServiceImpl implements UserService, UserDetailsService {
                             });
                 })
                 .collect(Collectors.toSet());
+       
+
         log.debug("Roles to assign (entities): {}", rolesToAssign.stream().map(Role::getName).collect(Collectors.joining(", ")));
 
         user.setRoles(rolesToAssign);

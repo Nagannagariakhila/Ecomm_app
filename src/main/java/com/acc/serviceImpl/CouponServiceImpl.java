@@ -70,6 +70,9 @@ public class CouponServiceImpl implements CouponService {
 
     @Override
     public Coupon createCoupon(Coupon coupon) {
+        if (couponRepository.existsByCodeIgnoreCase(coupon.getCode())) {
+            throw new IllegalArgumentException("A coupon with code '" + coupon.getCode() + "' already exists.");
+        }
         return couponRepository.save(coupon);
     }
 
@@ -88,6 +91,11 @@ public class CouponServiceImpl implements CouponService {
         Optional<Coupon> optionalCoupon = couponRepository.findById(id);
         if (optionalCoupon.isPresent()) {
             Coupon existingCoupon = optionalCoupon.get();
+            if (!existingCoupon.getCode().equalsIgnoreCase(updatedCoupon.getCode()) && 
+                couponRepository.existsByCodeIgnoreCase(updatedCoupon.getCode())) {
+                throw new IllegalArgumentException("Cannot update coupon. Another coupon with code '" + updatedCoupon.getCode() + "' already exists.");
+            }
+
             existingCoupon.setCode(updatedCoupon.getCode());
             existingCoupon.setDiscountType(updatedCoupon.getDiscountType());
             existingCoupon.setDiscountValue(updatedCoupon.getDiscountValue());

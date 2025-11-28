@@ -23,7 +23,7 @@ public class Review {
     @JoinColumn(name = "customer_id")
     private Customer customer;
 
-    private int rating; // 1 to 5
+    private int rating; 
     private String reviewText;
     private LocalDateTime createdAt;
   

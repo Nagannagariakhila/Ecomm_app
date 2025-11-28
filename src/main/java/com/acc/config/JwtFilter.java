@@ -4,122 +4,87 @@ import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService; // Import UserDetailsService
-import org.springframework.security.core.userdetails.UsernameNotFoundException; // Import UsernameNotFoundException
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
-import java.util.Arrays;
-import java.util.List;
 
 @Component
 public class JwtFilter extends OncePerRequestFilter {
+
+    private static final Logger logger = LoggerFactory.getLogger(JwtFilter.class);
 
     @Autowired
     private JwtUtil jwtUtil;
 
     @Autowired
-    private UserDetailsService userDetailsService; 
-
-    
-    private static final List<String> EXCLUDE_URL_PREFIXES = Arrays.asList(
-            "/api/auth/login",
-            "/api/auth/register",
-            "/api/auth/otp/generate",
-            "/api/auth/otp/verify",
-            "/api/customers/email/",
-            "/api/categories",
-            "/api/products/" 
-    );
+    private UserDetailsService userDetailsService;
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
             throws ServletException, IOException {
 
-        String requestUri = request.getRequestURI();
-        System.out.println("DEBUG JWT Filter: Incoming Request URI: " + requestUri);
-
-       
-        if (EXCLUDE_URL_PREFIXES.stream().anyMatch(uriPrefix -> requestUri.startsWith(uriPrefix))) {
-            System.out.println("DEBUG JWT Filter: Skipping JWT validation for public URI: " + requestUri);
-            filterChain.doFilter(request, response);
-            return;
-        }
-
         String authorizationHeader = request.getHeader("Authorization");
-        System.out.println("DEBUG JWT Filter: Authorization Header: " + authorizationHeader);
+        String requestUri = request.getRequestURI();
+        
+        logger.debug("Processing request URI: {}", requestUri);
+        logger.debug("Authorization Header: {}", authorizationHeader);
 
         String token = null;
-        String userName = null; 
+        String userName = null;
 
         if (authorizationHeader != null && authorizationHeader.startsWith("Bearer ")) {
             token = authorizationHeader.substring(7);
-            System.out.println("DEBUG JWT Filter: Extracted Token (first 20 chars): " + (token.length() > 20 ? token.substring(0, 20) + "..." : token));
+            logger.debug("Extracted Token (first 20 chars): {}", (token.length() > 20 ? token.substring(0, 20) + "..." : token));
+            
             try {
-                userName = jwtUtil.extractUsername(token); 
-                System.out.println("DEBUG JWT Filter: Extracted Username/Email from Token: " + userName);
+                
+                userName = jwtUtil.extractUsername(token);
+                logger.debug("Extracted Username/Email from Token: {}", userName);
             } catch (Exception e) {
-                System.err.println("ERROR JWT Filter: Failed to extract username/email from token: " + e.getMessage());
                
-                response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-                return;
+                logger.warn("Failed to extract username/email from token (Malformed or Expired). Allowing anonymous access for now if permitted: {}", e.getMessage());
+                userName = null;
             }
         } else {
-            System.out.println("DEBUG JWT Filter: No Bearer token found in Authorization header for protected URI: " + requestUri);
            
-            response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-            return;
+            logger.debug("No Bearer token found in Authorization header. Proceeding as anonymous.");
         }
 
         
         if (userName != null && SecurityContextHolder.getContext().getAuthentication() == null) {
             UserDetails userDetails = null;
             try {
-               
                 userDetails = userDetailsService.loadUserByUsername(userName);
-                System.out.println("DEBUG JWT Filter: UserDetails loaded for " + userName + ": " + (userDetails != null ? userDetails.getUsername() : "null"));
-                if (userDetails != null) {
-                    System.out.println("DEBUG JWT Filter: UserDetails Authorities: " + userDetails.getAuthorities());
+                
+                if (userDetails != null && jwtUtil.validateToken(token, userDetails)) {
+                    logger.debug("Token valid for user: {}", userName);
+                    UsernamePasswordAuthenticationToken authentication =
+                            new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
+                    
+                    authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
+                    SecurityContextHolder.getContext().setAuthentication(authentication);
+                    logger.debug("SecurityContextHolder populated for user: {}", userName);
+                } else {
+                   
+                    logger.debug("Token validation failed for user: {}", userName);
                 }
             } catch (UsernameNotFoundException e) {
-                System.err.println("ERROR JWT Filter: User " + userName + " not found via UserDetailsService: " + e.getMessage());
-                response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-                return;
+                logger.error("User {} not found via UserDetailsService: {}", userName, e.getMessage());
             } catch (Exception e) {
-                System.err.println("ERROR JWT Filter: Exception loading UserDetails for " + userName + ": " + e.getMessage());
-                response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
-                return;
-            }
-
-            if (userDetails != null && jwtUtil.validateToken(token, userDetails)) {
-                System.out.println("DEBUG JWT Filter: Token valid for user: " + userName);
-                UsernamePasswordAuthenticationToken authentication =
-                        new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
-                authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
-                SecurityContextHolder.getContext().setAuthentication(authentication);
-                System.out.println("DEBUG JWT Filter: SecurityContextHolder populated for user: " + userName);
-            } else {
-                System.out.println("DEBUG JWT Filter: Token validation failed or userDetails is null/invalid for " + userName);
-                response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-                return;
-            }
-        } else {
-            if (userName == null) {
-                System.out.println("DEBUG JWT Filter: Username extracted from token was null.");
-                response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-                return;
-            }
-            if (SecurityContextHolder.getContext().getAuthentication() != null) {
-                System.out.println("DEBUG JWT Filter: Authentication already exists in context for: " + SecurityContextHolder.getContext().getAuthentication().getName());
-               
+                logger.error("Exception during UserDetails loading or token validation for {}: {}", userName, e.getMessage(), e);
             }
         }
+        
         filterChain.doFilter(request, response);
     }
 }

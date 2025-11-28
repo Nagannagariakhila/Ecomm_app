@@ -15,6 +15,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Collections;
+import java.util.List;
 import java.util.Map;
 
 import com.acc.dto.AuthResponseDTO;
@@ -98,5 +99,14 @@ public class SuperAdminController {
             e.printStackTrace(); 
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(Collections.singletonMap("error", "An internal server error occurred."));
         }
+    }
+    @GetMapping("/users")
+    @PreAuthorize("hasAuthority('ROLE_SUPER_ADMIN')") 
+    public ResponseEntity<List<UserDTO>> getAllUsers() {
+        
+        List<UserDTO> users = userService.getAllUsers();
+        
+       
+        return new ResponseEntity<>(users, HttpStatus.OK);
     }
 }

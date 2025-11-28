@@ -40,20 +40,24 @@ public class CouponController {
     }
 
     @PostMapping
-    public ResponseEntity<CouponDto> createCoupon(@RequestBody CouponDto couponDto) {
-        Coupon coupon = convertToEntity(couponDto);
-        Coupon createdCoupon = couponService.createCoupon(coupon);
-        return ResponseEntity.ok(convertToDto(createdCoupon));
+    public ResponseEntity<Object> createCoupon(@RequestBody CouponDto couponDto) {
+        try {
+            Coupon coupon = convertToEntity(couponDto);
+            Coupon createdCoupon = couponService.createCoupon(coupon);
+            return ResponseEntity.ok(convertToDto(createdCoupon));
+        } catch (IllegalArgumentException e) {
+           
+            return ResponseEntity.status(HttpStatus.CONFLICT).body(Map.of("message", e.getMessage()));
+        }
     }
     
-    
-
-
     @PutMapping("/{id}")
-    public ResponseEntity<CouponDto> updateCoupon(@PathVariable Long id, @RequestBody CouponDto couponDto) {
+    public ResponseEntity<Object> updateCoupon(@PathVariable Long id, @RequestBody CouponDto couponDto) {
         try {
             Coupon updatedCoupon = couponService.updateCoupon(id, convertToEntity(couponDto));
             return ResponseEntity.ok(convertToDto(updatedCoupon));
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.status(HttpStatus.CONFLICT).body(Map.of("message", e.getMessage()));
         } catch (RuntimeException e) {
             return ResponseEntity.notFound().build();
         }
@@ -91,7 +95,7 @@ public class CouponController {
             CouponResult result = couponService.validateAndApplyCoupon(request.getCouponCode(), request.getCartTotal());
             return ResponseEntity.ok(result);
         } catch (IllegalArgumentException e) {
-            // This handles cases like an invalid or expired coupon
+            
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new CouponResult(e.getMessage(), 0.0, request.getCouponCode()));
         }
     }

@@ -5,11 +5,7 @@ import com.itextpdf.text.DocumentException;
 import java.io.IOException;
 
 public interface InvoiceService {
-    // Method to generate the Invoice data object
     Invoice generateInvoice(String orderCode);
-
-    // Method to generate the PDF file (byte array) from an Invoice object
     byte[] generatePdfInvoice(Invoice invoice) throws DocumentException, IOException;
-
 	Invoice generateInvoiceByCustomerCode(String customerCode);
 }

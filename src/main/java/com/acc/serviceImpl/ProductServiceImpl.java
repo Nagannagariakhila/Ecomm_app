@@ -234,13 +234,12 @@ public class ProductServiceImpl implements ProductService {
 
 	@Override
 	public Optional<Product> findById(Long id) {
-		// TODO Auto-generated method stub
+		
 		return Optional.empty();
 	}
 
 	@Override
 	public List<Product> findAll() {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
@@ -248,19 +247,16 @@ public class ProductServiceImpl implements ProductService {
 
 	@Override
 	public Product save(Product product) {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
 	public List<ProductDocument> searchProducts(String query) {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
 	public List<ProductDocument> searchProductsByCategory(String categoryName, String query) {
-		// TODO Auto-generated method stub
 		return null;
 	}
 

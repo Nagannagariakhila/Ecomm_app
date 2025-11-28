@@ -3,7 +3,7 @@ import java.util.List;
 import com.acc.dto.AdminDTO;
 import com.acc.dto.AuthResponseDTO;
 import com.acc.dto.UserDTO;
-import com.acc.entity.Admin;
+
 
 public interface AdminService {
 	AdminDTO registerAdmin(AdminDTO adminDto);

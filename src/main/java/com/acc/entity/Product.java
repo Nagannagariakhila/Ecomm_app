@@ -100,7 +100,7 @@ public class Product {
 	}
 
 	public void setAverageRating(double averageRating) {
-		// TODO Auto-generated method stub
+		
 		
 	}
 

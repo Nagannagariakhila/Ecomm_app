@@ -1,6 +1,5 @@
-// File: com/acc/serviceImpl/OrderServiceImpl.java
-package com.acc.serviceImpl;
 
+package com.acc.serviceImpl;
 import com.acc.dto.OrderDTO;
 import com.acc.dto.OrderItemDTO;
 import com.acc.dto.ProductDTO;
@@ -111,7 +110,7 @@ public class OrderServiceImpl implements OrderService {
 
         Order savedOrder = orderRepository.save(order);
         
-        // Generate and set the order code after saving for the first time
+        
         generateAndSetOrderCode(savedOrder);
         
         log.info("Order created successfully with ID: {} from cart ID: {}", savedOrder.getId(), cartId);
@@ -315,8 +314,6 @@ public class OrderServiceImpl implements OrderService {
         order.setDiscountedAmount(totalDiscountedAmount);
         
         Order savedOrder = orderRepository.save(order);
-        
-        // Generate and set the order code after saving for the first time
         generateAndSetOrderCode(savedOrder);
         
         log.info("Order saved successfully with ID: {}", savedOrder.getId());
@@ -344,7 +341,6 @@ public class OrderServiceImpl implements OrderService {
                     return new ResourceNotFoundException("Order", "Id", id);
                 });
         
-        // Convert the entity to DTO and return
         return convertToDTO(order);
     }
 
@@ -483,10 +479,6 @@ public class OrderServiceImpl implements OrderService {
         log.info("Order with ID {} deleted successfully.", id);
     }
     
-    /**
-     * Helper method to generate and set the order code.
-     * This must be called after the initial save.
-     */
     private void generateAndSetOrderCode(Order order) {
        
         String datePart = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMdd"));
