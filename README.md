@@ -74,11 +74,14 @@ Tables:
 
 - coupons
 
-  ##Installation
+ ## Installation
 
   1.Clone the repository
-  
 
+
+``` bash
+
+ https://github.com/Nagannagariakhila/Ecomm_app.git
   
- 
- 
+2.Open MySQL and create a database
+ CREATE DATABASE ecomm;
